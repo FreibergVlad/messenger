@@ -1,0 +1,15 @@
+<li class="message-wrap">
+  <div class="content-message-wrap" ngSwitch="{{msgFormat.toString()}}">
+    <div *ngSwitchCase="'SHORT'" class="short-message-wrap row">
+      <div class="message-content-wrap col-md-9">
+        {{message.content}}
+      </div>
+      <div class="message-datetime col-md-3">
+        <span>11:23:41 PM</span>
+      </div>
+    </div>
+    <div *ngSwitchCase="'LONG'" class="long-message-wrap">
+      {{message.content.toUpperCase()}}
+    </div>
+  </div>
+</li>

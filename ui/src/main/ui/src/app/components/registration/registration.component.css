@@ -1,0 +1,12 @@
+.login-page-submit > button {
+  margin-top: 5%;
+  width: 50%;
+}
+
+mat-error > p {
+  margin: 0;
+}
+
+mat-form-field {
+  width: 100%;
+}

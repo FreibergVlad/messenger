@@ -1,0 +1,17 @@
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+html,
+body {
+    height: 100%;
+    background: #e7ebf0;
+}
+
+app-root {
+    display: block;
+    height: 100%;
+}
+
+app-login {
+    display: block;
+    height: 100%;
+}

@@ -1,0 +1,19 @@
+<div class="history-top-panel">
+  <ul class="message-history-list">
+    <app-message *ngFor="let message of messages" [message]="message" [msgFormat]="getMsgFormat()"></app-message>
+  </ul>
+</div>
+<div class="history-bottom-panel">
+  <div fxLayout="row" class="row">
+    <!--<div class="file-attaching col-md-1">
+      <input type="file" id="file-attach-input"/>
+      <label title="Attach file" for="file-attach-input"><i class="fa fa-file"></i></label>
+    </div>-->
+    <div fxFlex="70%" class="current-message-input">
+      <textarea placeholder="Type your message here..."></textarea>
+    </div>
+    <div fxFlex="30%" class="send-button">
+      <button><img src="../../../assets/send_button.png" alt="Send"/></button>
+    </div>
+  </div>
+</div>

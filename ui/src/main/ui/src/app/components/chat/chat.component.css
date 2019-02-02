@@ -1,0 +1,58 @@
+.header {
+    margin-left: -15px;
+    height: 8%;
+    width: 102.7%;
+    background-color: #5682a3;
+    text-align: right;
+    padding-top: 1%;
+    padding-right: 1.5%;
+}
+
+.sign-out {
+    color: white;
+    font-size: 32px;
+    cursor: pointer;
+}
+
+.page-wrap {
+    height: 100%;
+}
+
+.row {
+    height: 87%;
+    background-color: #fff;
+    font-family: Tahoma, sans-serif, Arial, Helvetica;
+}
+
+.no-chat {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    padding-top: 25%;
+    text-align: center;
+    color: rgb(153, 153, 153);
+    font-size: 20px;
+}
+
+.history {
+    height: 100%;
+    padding: 0;
+}
+
+.dialogs {
+    height: 100%;
+    border-right: 2px solid #E9EBED;
+    padding: 0;
+    margin: 0;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    background: transparent;
+}
+
+.dialogs-list {
+    height: 100%;
+    padding: 5% 0 0;
+    margin: 0;
+}
