@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import validation.PasswordMatches;
+import validation.UsernameUnique;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -18,6 +19,7 @@ public class UserDto {
     @NotNull(message = "Username must be not null!")
     @NotEmpty(message = "Username must be not empty!")
     @Length(min = 5, message = "Username must contains at least 5 symbols")
+    @UsernameUnique
     private String username;
 
     @NotNull(message = "Password must be not null!")

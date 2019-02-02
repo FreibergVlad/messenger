@@ -1,8 +1,7 @@
 package com.freiberg.authserver.service;
 
-import com.freiberg.authserver.dao.RoleDao;
-import com.freiberg.authserver.dao.UserDao;
-import com.freiberg.authserver.exceptions.UserAlreadyExistsException;
+import dao.RoleDao;
+import dao.UserDao;
 import lombok.AllArgsConstructor;
 import model.Role;
 import model.User;
@@ -29,11 +28,8 @@ public class UserService {
 
     private final static String DEFAULT_ROLE = "ROLE_USER";
 
-    public UserDto handleRegistrationRequest(UserDto userDto) throws UserAlreadyExistsException {
+    public UserDto handleRegistrationRequest(UserDto userDto) {
         User user = createUserAccount(userDto);
-        if (user == null) {
-            throw new UserAlreadyExistsException();
-        }
         logger.info(new Date() + " Created new account: " + user);
         return userDto;
     }
@@ -45,9 +41,6 @@ public class UserService {
 
     private User createUserAccount(UserDto userDto, Set<Role> roles) {
         String username = userDto.getUsername();
-        if (userDao.findByUsername(username) != null) {
-            return null;
-        }
         String passHash = passwordEncoder.encode(userDto.getPassword());
         User user = new User();
         user.setUsername(username);

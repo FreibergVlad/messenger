@@ -1,4 +1,4 @@
-package com.freiberg.authserver.dao;
+package dao;
 
 import model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;

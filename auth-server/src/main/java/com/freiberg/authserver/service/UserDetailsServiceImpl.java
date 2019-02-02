@@ -1,10 +1,11 @@
 package com.freiberg.authserver.service;
 
-import com.freiberg.authserver.dao.UserDao;
+import dao.UserDao;
 import lombok.AllArgsConstructor;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

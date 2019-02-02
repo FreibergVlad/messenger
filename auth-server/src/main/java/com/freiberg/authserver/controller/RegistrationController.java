@@ -1,7 +1,6 @@
 package com.freiberg.authserver.controller;
 
 import com.freiberg.authserver.service.UserService;
-import com.freiberg.authserver.exceptions.UserAlreadyExistsException;
 import lombok.AllArgsConstructor;
 import model.UserDto;
 import org.springframework.http.HttpStatus;
@@ -24,17 +23,10 @@ public class RegistrationController {
 
     private UserService userService;
 
-    private static final String USER_EXISTS_MESSAGE = "User with such username already exists!";
-
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDto registerUser(@Valid @RequestBody UserDto userDto) throws UserAlreadyExistsException {
+    public UserDto registerUser(@Valid @RequestBody UserDto userDto) {
         return userService.handleRegistrationRequest(userDto);
-    }
-
-    @ExceptionHandler(UserAlreadyExistsException.class)
-    public ResponseEntity<String> handleUserExistsException() {
-        return new ResponseEntity<>(USER_EXISTS_MESSAGE, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(BindException.class)
