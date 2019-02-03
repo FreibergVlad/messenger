@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Config } from '../config/config';
+import { Config } from '../../config/config';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';

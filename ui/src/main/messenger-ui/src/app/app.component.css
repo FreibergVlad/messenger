@@ -1,0 +1,10 @@
+.main {
+  padding-left: 0;
+  padding-right: 0;
+  background-color: white;
+  height: 91%;
+}
+
+.dialog-tabs {
+  border-right: 2px solid #E9EBED;
+}
