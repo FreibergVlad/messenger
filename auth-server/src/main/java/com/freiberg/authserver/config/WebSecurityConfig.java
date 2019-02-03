@@ -1,5 +1,6 @@
 package com.freiberg.authserver.config;
 
+import com.freiberg.authserver.handlers.LogoutSuccessHandler;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +19,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private static final int BCRYPT_STRENGTH = 11;
 
     private UserDetailsService userDetailsService;
+    private LogoutSuccessHandler logoutSuccessHandler;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -40,6 +42,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .loginPage("/login")
+                .permitAll()
+                .and()
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessHandler(logoutSuccessHandler)
                 .permitAll();
     }
 
