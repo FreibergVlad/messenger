@@ -21,3 +21,13 @@
 .scroll-bar .ui-scrollpanel-content {
   padding: 0;
 }
+
+.no-dialogs-selected {
+  color: darkgrey;
+  height: 100%;
+  display: flex;
+  font-size: 20px;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+}

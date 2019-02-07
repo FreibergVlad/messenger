@@ -1,5 +1,7 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {AuthService} from '../../services/auth/auth.service';
+import {DialogPreview} from '../../models/dialog-preview';
+import {MessagingService} from '../../services/messaging/messaging.service';
 
 @Component({
   selector: 'app-dialogs',
@@ -9,16 +11,17 @@ import {AuthService} from '../../services/auth/auth.service';
 })
 export class DialogsComponent implements OnInit {
 
-  mockedTabs = Array.from(Array(20).keys());
+  dialogsList: Array<DialogPreview>;
   selectedTabId?: number = null;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService,
+              private messagingService: MessagingService) {}
 
   ngOnInit(): void {
-
+    this.dialogsList = this.messagingService.getDialogsList();
   }
 
-  changeDialog(tabId: number) {
+  changeDialog(tabId: number): void {
     this.selectedTabId = tabId;
   }
 

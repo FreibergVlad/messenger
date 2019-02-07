@@ -1,15 +1,15 @@
 <div class="dialog-tab-container row col-md-12">
   <div class="col-md-3 avatar-container">
     <div class="avatar-circle">
-      V
+      {{dialogPreview.name.charAt(0).toUpperCase()}}
     </div>
   </div>
   <div class="col-md-9 dialog-preview-container">
     <div class="dialog-name">
-      <span>Some name</span>
+      <span>{{dialogPreview.name}}</span>
     </div>
     <div class="dialog-last-message">
-      <span>Last message</span>
+      <span>{{dialogPreview.lastMessage}}</span>
     </div>
   </div>
 </div>

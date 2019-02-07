@@ -1,4 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {DialogPreview} from '../../models/dialog-preview';
 
 @Component({
   selector: 'app-dialog-tab',
@@ -7,9 +8,7 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class DialogTabComponent implements OnInit {
 
-  @Input() tabId: number;
-  @Input() name: string;
-  @Input() lastMessage: string;
+  @Input() dialogPreview: DialogPreview;
 
   constructor() { }
 

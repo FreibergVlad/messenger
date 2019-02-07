@@ -1,5 +1,10 @@
 :host(.selected) .dialog-tab-container {
   background-color: #6490b1;
+  color: white;
+}
+
+:host(:not(.selected)) .dialog-tab-container {
+  color: black;
 }
 
 :host(:hover:not(.selected)) .dialog-tab-container {
@@ -10,6 +15,8 @@
   padding-top: 5px;
   padding-bottom: 5px;
   cursor: pointer;
+  margin: 0;
+  user-select: none;
 }
 
 .avatar-circle {
