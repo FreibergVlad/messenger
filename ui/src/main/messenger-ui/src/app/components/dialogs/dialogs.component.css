@@ -1,0 +1,23 @@
+.main {
+  padding-left: 0;
+  padding-right: 0;
+  background-color: white;
+  height: 91%;
+}
+
+.dialog-tabs {
+  padding: 0;
+}
+
+.scroll-bar .ui-scrollpanel-bar {
+  width: 2px;
+  background-color: rgba(30, 85, 127, 0.3);
+}
+
+.scroll-bar .ui-scrollpanel-wrapper {
+  border-right: 2px solid #E9EBED;
+}
+
+.scroll-bar .ui-scrollpanel-content {
+  padding: 0;
+}

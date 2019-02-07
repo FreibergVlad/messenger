@@ -13,6 +13,7 @@ export class Config {
     oidc: false,
     clientId: 'testClientId',
     scope: 'read write',
+    clearHashAfterLogin: true
   };
 
 }

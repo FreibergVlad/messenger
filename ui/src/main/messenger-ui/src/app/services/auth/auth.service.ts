@@ -17,6 +17,7 @@ export class AuthService implements CanActivate {
         if (!tokenPresentsInUrl && !this.oauthService.getAccessToken()) {
           this.obtainAccessToken();
         }
+        location.hash = '';
       });
   }
 
