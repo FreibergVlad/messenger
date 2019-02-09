@@ -1,7 +1,13 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnInit,
+  ViewEncapsulation
+} from '@angular/core';
 import {AuthService} from '../../services/auth/auth.service';
 import {DialogPreview} from '../../models/dialog-preview';
 import {MessagingService} from '../../services/messaging/messaging.service';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-dialogs',
@@ -9,20 +15,33 @@ import {MessagingService} from '../../services/messaging/messaging.service';
   styleUrls: ['./dialogs.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class DialogsComponent implements OnInit {
+export class DialogsComponent implements OnInit, AfterViewInit {
 
   dialogsList: Array<DialogPreview>;
   selectedTabId?: number = null;
 
   constructor(private authService: AuthService,
-              private messagingService: MessagingService) {}
+              private messagingService: MessagingService,
+              private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.dialogsList = this.messagingService.getDialogsList();
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      const currentDialog = this.getConversationIdFromUrl();
+      if (currentDialog) {
+        this.changeDialog(Number(currentDialog));
+      }
+    });
   }
 
   changeDialog(tabId: number): void {
     this.selectedTabId = tabId;
   }
 
+  private getConversationIdFromUrl(): number {
+    return this.route.firstChild && this.route.firstChild.snapshot.params.conversationId;
+  }
 }

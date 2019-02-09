@@ -2,12 +2,17 @@
 <div class="main col-md-10 offset-md-1 row">
   <div class="container dialog-tabs col-md-3">
     <p-scrollPanel styleClass="scroll-bar" [style]="{width: '100%', height: '100%'}">
-      <app-dialog-tab *ngFor="let tab of dialogsList" [dialogPreview]="tab" (click)="changeDialog(tab.tabId)" [class.selected]="selectedTabId === tab.tabId"></app-dialog-tab>
+      <app-dialog-tab [routerLink]="['/dialogs', { outlets: { 'conversation': [tab.tabId]}}]"
+                      *ngFor="let tab of dialogsList" [dialogPreview]="tab"
+                      (click)="changeDialog(tab.tabId)"
+                      [class.selected]="selectedTabId === tab.tabId">
+      </app-dialog-tab>
     </p-scrollPanel>
   </div>
   <div class="container dialog-messages col-md-9">
     <div *ngIf="!selectedTabId" class="no-dialogs-selected">
       <p>Please select dialog to start messaging</p>
     </div>
+    <router-outlet name="conversation"></router-outlet>
   </div>
 </div>

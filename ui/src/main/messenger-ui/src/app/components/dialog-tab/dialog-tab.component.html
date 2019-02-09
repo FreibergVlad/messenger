@@ -1,6 +1,6 @@
 <div class="dialog-tab-container row col-md-12">
   <div class="col-md-3 avatar-container">
-    <div class="avatar-circle">
+    <div class="avatar-circle" [style.background-color]="getAvatarColor(dialogPreview.name)">
       {{dialogPreview.name.charAt(0).toUpperCase()}}
     </div>
   </div>

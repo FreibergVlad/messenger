@@ -10,13 +10,15 @@ import { HeaderComponent } from './components/header/header.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ScrollPanelModule } from 'primeng/primeng';
 import { DialogsComponent } from './components/dialogs/dialogs.component';
+import { MessagesComponent } from './components/messages/messages.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     DialogTabComponent,
     HeaderComponent,
-    DialogsComponent
+    DialogsComponent,
+    MessagesComponent
   ],
   imports: [
     BrowserModule,
