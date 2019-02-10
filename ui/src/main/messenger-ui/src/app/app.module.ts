@@ -11,6 +11,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ScrollPanelModule } from 'primeng/primeng';
 import { DialogsComponent } from './components/dialogs/dialogs.component';
 import { MessagesComponent } from './components/messages/messages.component';
+import { MessageComponent } from './components/message/message.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { MessagesComponent } from './components/messages/messages.component';
     DialogTabComponent,
     HeaderComponent,
     DialogsComponent,
-    MessagesComponent
+    MessagesComponent,
+    MessageComponent
   ],
   imports: [
     BrowserModule,
