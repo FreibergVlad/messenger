@@ -8,10 +8,13 @@ import { OAuthModule } from 'angular-oauth2-oidc';
 import { DialogTabComponent } from './components/dialog-tab/dialog-tab.component';
 import { HeaderComponent } from './components/header/header.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ScrollPanelModule } from 'primeng/primeng';
+import {ButtonModule, ScrollPanelModule} from 'primeng/primeng';
 import { DialogsComponent } from './components/dialogs/dialogs.component';
 import { MessagesComponent } from './components/messages/messages.component';
 import { MessageComponent } from './components/message/message.component';
+import { BottomPanelComponent } from './components/bottom-panel/bottom-panel.component';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -20,12 +23,16 @@ import { MessageComponent } from './components/message/message.component';
     HeaderComponent,
     DialogsComponent,
     MessagesComponent,
-    MessageComponent
+    MessageComponent,
+    BottomPanelComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    FormsModule,
     ScrollPanelModule,
+    InputTextareaModule,
+    ButtonModule,
     AppRoutingModule,
     HttpClientModule,
     OAuthModule.forRoot()
