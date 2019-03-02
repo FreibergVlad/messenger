@@ -15,6 +15,7 @@ import { MessageComponent } from './components/message/message.component';
 import { BottomPanelComponent } from './components/bottom-panel/bottom-panel.component';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { FormsModule } from '@angular/forms';
+import { UserAvatarComponent } from './components/user-avatar/user-avatar.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { FormsModule } from '@angular/forms';
     DialogsComponent,
     MessagesComponent,
     MessageComponent,
-    BottomPanelComponent
+    BottomPanelComponent,
+    UserAvatarComponent
   ],
   imports: [
     BrowserModule,
