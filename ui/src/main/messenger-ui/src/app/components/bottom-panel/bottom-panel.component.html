@@ -1,13 +1,13 @@
 <div class="row">
-  <div class="file-uploader-wrapper">
+  <div class="file-uploader-wrapper col-md-2">
   </div>
-  <div class="textarea-wrapper" (keydown)="onKeyDown($event)">
+  <div class="textarea-wrapper col-md-8" (keydown)="onKeyDown($event)">
     <textarea pInputTextarea class="input-textarea"
               [(ngModel)]="messageText"
               placeholder="Write you message...">
     </textarea>
   </div>
-  <div class="send-button-wrapper">
+  <div class="send-button-wrapper col-md-2">
     <button (click)="sendMessage()">
       <span>SEND</span>
     </button>

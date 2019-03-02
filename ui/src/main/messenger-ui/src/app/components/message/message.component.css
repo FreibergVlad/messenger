@@ -1,0 +1,22 @@
+.message-content-wrap {
+  margin-top: 10px;
+}
+
+.message-date > span {
+  text-align: left;
+  font-size: 11px;
+  color: #adadad;
+  user-select: none;
+}
+
+.message-author {
+  color: #3a6d99;
+  font: 13px/18px Tahoma,sans-serif,Arial,Helvetica;
+  font-weight: 700;
+}
+
+.message-text {
+  margin-top: 5px;
+  word-break: break-word;
+  font: 13px/18px Tahoma,sans-serif,Arial,Helvetica;
+}
