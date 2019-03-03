@@ -41,6 +41,7 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         endpoints.authenticationManager(authenticationManager);
+        endpoints.tokenEnhancer(accessTokenConverter());
         endpoints.tokenStore(tokenStore());
         endpoints.userDetailsService(userDetailsService);
     }
