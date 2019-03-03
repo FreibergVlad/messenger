@@ -24,4 +24,17 @@ export class MessagesComponent implements OnInit {
     });
   }
 
+  /**
+   * Returns true if messages[index] and messages[index - 1] were sent in
+   * different days. If it's, then we need to insert the date separator
+   */
+  private isNewDay(index: number) {
+    if (!this.messages[index - 1]) {
+      return true;
+    }
+    const currentDate: string = new Date(this.messages[index].timestamp).toDateString();
+    const previousDate: string = new Date(this.messages[index - 1].timestamp).toDateString();
+    return  currentDate !== previousDate;
+  }
+
 }

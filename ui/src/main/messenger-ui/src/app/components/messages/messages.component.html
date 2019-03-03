@@ -3,7 +3,8 @@
     <p-scrollPanel #scrollPanel styleClass="messages-scroll-bar"
                    [style]="{width: '100%', height: '100%'}"
                    [class.scroll-bar-visible]="scrollPanel.scrollTop > 0">
-      <app-message *ngFor="let message of messages" [message]="message">
+      <app-message *ngFor="let message of messages; let i = index"
+                   [message]="message" [isNewDay]="isNewDay(i)">
       </app-message>
     </p-scrollPanel>
   </div>
