@@ -33,8 +33,7 @@ CREATE TABLE user_roles (
 
 CREATE TABLE allowed_origins (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  origin VARCHAR(255),
-  allowed_methods VARCHAR(255)
+  url VARCHAR(255)
 )
   ENGINE = InnoDB;
 
