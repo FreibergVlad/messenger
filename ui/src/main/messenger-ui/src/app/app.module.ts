@@ -16,6 +16,7 @@ import { BottomPanelComponent } from './components/bottom-panel/bottom-panel.com
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { FormsModule } from '@angular/forms';
 import { UserAvatarComponent } from './components/user-avatar/user-avatar.component';
+import { RxStompService } from '@stomp/ng2-stompjs';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,9 @@ import { UserAvatarComponent } from './components/user-avatar/user-avatar.compon
     HttpClientModule,
     OAuthModule.forRoot()
   ],
-  providers: [],
+  providers: [
+    RxStompService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

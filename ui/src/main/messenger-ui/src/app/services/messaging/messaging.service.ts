@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import {DialogPreview} from '../../models/dialog-preview';
 import {Message} from '../../models/message';
+import {InjectableRxStompConfig, RxStompService} from '@stomp/ng2-stompjs';
+import {AuthService} from '../auth/auth.service';
+import {Config} from '../../config/config';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +25,13 @@ export class MessagingService {
     new Message('Vlad', 'Some message', Date.now()), new Message('Vlad', 'Some message', Date.now()),
     new Message('Vlad', 'Some message', Date.now()), new Message('Vlad', 'Some message', Date.now())];
 
-  constructor() { }
+  constructor(private stompService: RxStompService,
+              private authService: AuthService) { }
+
+  initMessaging() {
+    this.stompService.configure(this.updateConfigWithAccessToken());
+    this.stompService.activate();
+  }
 
   getDialogsList(): DialogPreview[] {
     return this.mockedDialogs;
@@ -30,6 +39,16 @@ export class MessagingService {
 
   getMessagesByConversationId(conversationId: number): Message[] {
     return this.mockedMessages;
+  }
+
+  /**
+   * Adds JWT token to web socket server URL
+   */
+  private updateConfigWithAccessToken(): InjectableRxStompConfig {
+    const stompConfig: InjectableRxStompConfig = {};
+    Object.assign(stompConfig, Config.WS_CONFIG);
+    stompConfig.brokerURL += `?access_token=${this.authService.getAccessToken()}`;
+    return stompConfig;
   }
 
 }
