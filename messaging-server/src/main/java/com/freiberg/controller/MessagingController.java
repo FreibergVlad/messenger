@@ -15,7 +15,7 @@ public class MessagingController {
 
     private MessagingService messagingService;
 
-    @SubscribeMapping("/getContacts")
+    @SubscribeMapping("/contacts")
     public List<DialogPreview> getContacts(Principal principal) {
         return messagingService.getContacts(principal);
     }
