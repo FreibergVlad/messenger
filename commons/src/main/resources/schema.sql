@@ -12,6 +12,17 @@ CREATE TABLE users (
 )
   ENGINE = InnoDB;
 
+CREATE TABLE contacts (
+  userID INT NOT NULL,
+  contactID INT NOT NULL,
+
+  FOREIGN KEY (userID) REFERENCES users (userID),
+  FOREIGN KEY (contactID) REFERENCES users (userID),
+
+  UNIQUE (userID, contactID)
+)
+  ENGINE = InnoDB;
+
 -- Table: roles
 CREATE TABLE roles (
   roleID INT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -108,9 +119,3 @@ create table ClientDetails (
   additionalInformation VARCHAR(4096),
   autoApproveScopes VARCHAR(255)
 );
-
-
-INSERT INTO roles (roleID, name) VALUES (1, 'ROLE_USER');
-INSERT INTO allowed_origins (origin, allowed_methods) VALUES ('localhost:4200', 'GET,PUT,POST,OPTIONS');
-INSERT INTO oauth_client_details (client_id, authorized_grant_types, scope, autoapprove, web_server_redirect_uri)
-  VALUES ('testClientId', 'implicit', 'read,write', 'true', 'localhost:4200');

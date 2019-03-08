@@ -32,9 +32,21 @@ public class User {
     private boolean locked;
 
     @OneToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "userID"),
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "userID"),
             inverseJoinColumns = @JoinColumn(name = "roleID"))
     private Set<Role> roles;
 
+    @ManyToMany
+    @JoinTable(name ="contacts",
+            joinColumns = @JoinColumn(name = "userID"),
+            inverseJoinColumns = @JoinColumn(name = "contactID"))
+    private Set<User> contacts;
+
+    @ManyToMany
+    @JoinTable(name = "contacts",
+            joinColumns = @JoinColumn(name = "contactID"),
+            inverseJoinColumns = @JoinColumn(name = "userID"))
+    private Set<User> contactOf;
 
 }

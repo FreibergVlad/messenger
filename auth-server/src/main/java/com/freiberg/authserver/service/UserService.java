@@ -48,6 +48,8 @@ public class UserService {
         user.setRoles(roles);
         user.setLocked(false);
         user.setLastLogin(null);
+        user.setContacts(Collections.emptySet());
+        user.setContactOf(Collections.emptySet());
         return userDao.save(user);
     }
 }
