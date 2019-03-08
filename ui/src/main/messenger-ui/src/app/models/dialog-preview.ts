@@ -1,12 +1,12 @@
 export class DialogPreview {
 
-  tabId: number;
-  name: string;
+  userId: number;
+  username: string;
   lastMessage: string;
 
-  constructor(tabId, name, lastMessage) {
-    this.tabId = tabId;
-    this.name = name;
+  constructor(userId, username, lastMessage) {
+    this.userId = userId;
+    this.username = name;
     this.lastMessage = lastMessage;
   }
 

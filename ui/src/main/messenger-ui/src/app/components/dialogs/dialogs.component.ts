@@ -17,7 +17,7 @@ import {ActivatedRoute} from '@angular/router';
 })
 export class DialogsComponent implements OnInit, AfterViewInit {
 
-  dialogsList: Array<DialogPreview>;
+  dialogsList: DialogPreview[] = [];
   selectedTabId?: number = null;
 
   constructor(private authService: AuthService,
@@ -25,7 +25,9 @@ export class DialogsComponent implements OnInit, AfterViewInit {
               private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.dialogsList = this.messagingService.getDialogsList();
+    this.messagingService.getDialogsList().subscribe((resp) => {
+      this.dialogsList = JSON.parse(resp.body);
+    });
   }
 
   ngAfterViewInit(): void {

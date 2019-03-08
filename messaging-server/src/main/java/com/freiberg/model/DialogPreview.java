@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @Data
 public class DialogPreview {
 
+    private long userId;
     private String username;
-    private String lastMessageText;
+    private String lastMessage;
 
 }

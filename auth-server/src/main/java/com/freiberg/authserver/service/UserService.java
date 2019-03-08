@@ -12,7 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,7 +29,7 @@ public class UserService {
 
     public UserDto handleRegistrationRequest(UserDto userDto) {
         User user = createUserAccount(userDto);
-        logger.info(new Date() + " Created new account: " + user);
+        logger.info("Created new account: " + user);
         return userDto;
     }
 
@@ -49,7 +48,6 @@ public class UserService {
         user.setLocked(false);
         user.setLastLogin(null);
         user.setContacts(Collections.emptySet());
-        user.setContactOf(Collections.emptySet());
         return userDao.save(user);
     }
 }

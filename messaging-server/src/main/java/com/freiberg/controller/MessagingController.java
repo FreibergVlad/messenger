@@ -2,22 +2,20 @@ package com.freiberg.controller;
 
 import com.freiberg.model.DialogPreview;
 import com.freiberg.service.MessagingService;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.messaging.handler.annotation.MessageMapping;
+import lombok.AllArgsConstructor;
+import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
 
 import java.security.Principal;
 import java.util.List;
 
 @Controller
-@NoArgsConstructor
-@Data
+@AllArgsConstructor
 public class MessagingController {
 
     private MessagingService messagingService;
 
-    @MessageMapping("/getContacts")
+    @SubscribeMapping("/getContacts")
     public List<DialogPreview> getContacts(Principal principal) {
         return messagingService.getContacts(principal);
     }

@@ -1,18 +1,15 @@
 import { Injectable } from '@angular/core';
-import {DialogPreview} from '../../models/dialog-preview';
 import {Message} from '../../models/message';
 import {InjectableRxStompConfig, RxStompService} from '@stomp/ng2-stompjs';
 import {AuthService} from '../auth/auth.service';
 import {Config} from '../../config/config';
+import {Observable} from 'rxjs';
+import {IMessage} from '@stomp/stompjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessagingService {
-
-  mockedDialogs: DialogPreview[] = [new DialogPreview(1, 'Vlad', 'Some message'),
-    new DialogPreview(2, 'Vlad', 'Some message'), new DialogPreview(3, 'Vlad', 'Some message')
-    , new DialogPreview(4, 'Vlad', 'Some message')];
 
   mockedMessages: Message[] = [new Message('Vlad', 'Some message', Date.now()),
     new Message('Vlad', 'Some message', Date.now()), new Message('Vlad', 'Some message', Date.now())
@@ -33,8 +30,8 @@ export class MessagingService {
     this.stompService.activate();
   }
 
-  getDialogsList(): DialogPreview[] {
-    return this.mockedDialogs;
+  getDialogsList(): Observable<IMessage> {
+    return this.subscribe(Config.MESSAGING_CONFIG.getContactsListURL);
   }
 
   getMessagesByConversationId(conversationId: number): Message[] {
@@ -49,6 +46,16 @@ export class MessagingService {
     Object.assign(stompConfig, Config.WS_CONFIG);
     stompConfig.brokerURL += `?access_token=${this.authService.getAccessToken()}`;
     return stompConfig;
+  }
+
+  /**
+   * Wrapper around {@link stompService#watch},
+   * adds JWT access token to each request
+   */
+  private subscribe(destination: string): Observable<IMessage> {
+    return this.stompService.watch(destination, {
+      access_token: this.authService.getAccessToken()
+    });
   }
 
 }
