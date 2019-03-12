@@ -49,7 +49,7 @@ CREATE TABLE messages (
   messageText LONGTEXT,
   messageType VARCHAR(255),
   isPending TINYINT,
-  timestamp TIMESTAMP,
+  timestamp DATETIME DEFAULT now(),
 
   FOREIGN KEY (senderId) REFERENCES users (userID),
   FOREIGN KEY (receiverId) REFERENCES users (userID)
