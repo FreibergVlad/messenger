@@ -7,7 +7,7 @@ CREATE TABLE users (
   userID   INT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(255) NOT NULL,
   password VARCHAR(255) NOT NULL,
-  last_login DATETIME,
+  lastLogin DATETIME,
   locked BOOLEAN DEFAULT FALSE
 )
   ENGINE = InnoDB;
@@ -39,6 +39,20 @@ CREATE TABLE user_roles (
   FOREIGN KEY (roleID) REFERENCES roles (roleID),
 
   UNIQUE (userID, roleID)
+)
+  ENGINE = InnoDB;
+
+CREATE TABLE messages (
+  messageId INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  senderId INT,
+  receiverId INT,
+  messageText LONGTEXT,
+  messageType VARCHAR(255),
+  isPending TINYINT,
+  timestamp TIMESTAMP,
+
+  FOREIGN KEY (senderId) REFERENCES users (userID),
+  FOREIGN KEY (receiverId) REFERENCES users (userID)
 )
   ENGINE = InnoDB;
 
