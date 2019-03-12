@@ -9,4 +9,6 @@ import java.util.List;
 public interface MessageDao extends JpaRepository<Message, Long> {
 
     List<Message> findMessageBySenderEqualsAndReceiverEquals(User sender, User receiver);
+
+    Message findFirstBySenderEqualsAndReceiverEqualsOrderByTimestampDesc(User sender, User receiver);
 }

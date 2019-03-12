@@ -39,8 +39,10 @@ public class MessagingServiceImpl implements MessagingService {
         Set<User> contacts = user.getContacts();
         List<DialogPreview> dialogPreviews = new ArrayList<>();
 
-        contacts.forEach(contact -> dialogPreviews
-                .add(new DialogPreview(contact.getId(), contact.getUsername(), "Mocked message")));
+        contacts.forEach(contact -> {
+            Message lastReceivedMessage = messageDao.findFirstBySenderEqualsAndReceiverEqualsOrderByTimestampDesc(contact, user);
+            dialogPreviews.add(new DialogPreview(contact.getId(), contact.getUsername(), lastReceivedMessage.getMessageText()));
+        });
 
         return dialogPreviews;
     }
