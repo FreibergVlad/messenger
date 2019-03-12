@@ -34,3 +34,16 @@ INSERT INTO contacts (userID, contactID) VALUES (3, 1);
 
 -- Contacts for userID 4
 INSERT INTO contacts (userID, contactID) VALUES (4, 1);
+
+INSERT INTO messages (senderId, receiverId, messageText, messageType, isPending, timestamp)
+  VALUES (1, 2, 'Some message', 'CHAT_COMMUNICATION', 0, now());
+INSERT INTO messages (senderId, receiverId, messageText, messageType, isPending, timestamp)
+  VALUES (1, 2, 'Some message', 'CHAT_COMMUNICATION', 0, now());
+INSERT INTO messages (senderId, receiverId, messageText, messageType, isPending, timestamp)
+  VALUES (2, 1, 'Some message', 'CHAT_COMMUNICATION', 0, now());
+INSERT INTO messages (senderId, receiverId, messageText, messageType, isPending, timestamp)
+  VALUES (1, 2, 'Some message', 'CHAT_COMMUNICATION', 0, now());
+INSERT INTO messages (senderId, receiverId, messageText, messageType, isPending, timestamp)
+  VALUES (2, 1, 'Some message', 'CHAT_COMMUNICATION', 0, now());
+INSERT INTO messages (senderId, receiverId, messageText, messageType, isPending, timestamp)
+  VALUES (1, 2, 'Some message', 'CHAT_COMMUNICATION', 0, now());
