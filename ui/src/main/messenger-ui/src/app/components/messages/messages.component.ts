@@ -20,7 +20,9 @@ export class MessagesComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(params => {
       this.conversationId = +params.conversationId;
-      this.messages = this.messagingService.getMessagesByConversationId(this.conversationId);
+      this.messagingService.getMessagesByConversationId(this.conversationId).subscribe(resp => {
+        this.messages = JSON.parse(resp.body);
+      });
     });
   }
 

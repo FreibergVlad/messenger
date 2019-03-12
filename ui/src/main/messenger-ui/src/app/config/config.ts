@@ -25,7 +25,8 @@ export class Config {
   };
 
   static readonly MESSAGING_CONFIG = {
-    getContactsListURL: `${Config.APP_DEST_PREFIX}/contacts`
+    getContactsListURL: `${Config.APP_DEST_PREFIX}/contacts`,
+    getMessagesURL: `${Config.APP_DEST_PREFIX}/messages`
   };
 
 }

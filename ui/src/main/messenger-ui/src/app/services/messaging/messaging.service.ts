@@ -1,26 +1,14 @@
 import { Injectable } from '@angular/core';
-import {Message} from '../../models/message';
 import {InjectableRxStompConfig, RxStompService} from '@stomp/ng2-stompjs';
 import {AuthService} from '../auth/auth.service';
 import {Config} from '../../config/config';
 import {Observable} from 'rxjs';
-import {IMessage} from '@stomp/stompjs';
+import {IMessage, StompHeaders} from '@stomp/stompjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessagingService {
-
-  mockedMessages: Message[] = [new Message('Vlad', 'Some message', Date.now()),
-    new Message('Vlad', 'Some message', Date.now()), new Message('Vlad', 'Some message', Date.now())
-  , new Message('Vlad', 'Some message', Date.now()), new Message('Vlad', 'Some message', Date.now()),
-    new Message('Vlad', 'Some message', Date.now()), new Message('Vlad', 'Some message', Date.now()),
-    new Message('Vlad', 'Some message', Date.now()), new Message('Vlad', 'Some message', Date.now()),
-    new Message('Vlad', 'Some message', Date.now()), new Message('Vlad', 'Some message', Date.now()),
-    new Message('Vlad', 'Some message', Date.now()), new Message('Vlad', 'Some message', Date.now()),
-    new Message('Vlad', 'Some message', Date.now()), new Message('Vlad', 'Some message', Date.now()),
-    new Message('Vlad', 'Some message', Date.now()), new Message('Vlad', 'Some message', Date.now()),
-    new Message('Vlad', 'Some message', Date.now()), new Message('Vlad', 'Some message', Date.now())];
 
   constructor(private stompService: RxStompService,
               private authService: AuthService) { }
@@ -34,8 +22,10 @@ export class MessagingService {
     return this.subscribe(Config.MESSAGING_CONFIG.getContactsListURL);
   }
 
-  getMessagesByConversationId(conversationId: number): Message[] {
-    return this.mockedMessages;
+  getMessagesByConversationId(conversationId: number): Observable<IMessage> {
+    const headers: StompHeaders = {};
+    headers.conversationId = conversationId.toString();
+    return this.subscribe(Config.MESSAGING_CONFIG.getMessagesURL, headers);
   }
 
   /**
@@ -52,10 +42,9 @@ export class MessagingService {
    * Wrapper around {@link stompService#watch},
    * adds JWT access token to each request
    */
-  private subscribe(destination: string): Observable<IMessage> {
-    return this.stompService.watch(destination, {
-      access_token: this.authService.getAccessToken()
-    });
+  private subscribe(destination: string, headers: StompHeaders = {}): Observable<IMessage> {
+    headers.access_token = this.authService.getAccessToken();
+    return this.stompService.watch(destination, headers);
   }
 
 }
