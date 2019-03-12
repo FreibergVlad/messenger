@@ -1,10 +1,10 @@
 package com.freiberg.controller;
 
 import com.freiberg.model.DialogPreview;
-import com.freiberg.model.Message;
+import com.freiberg.model.MessageDTO;
 import com.freiberg.service.MessagingService;
 import lombok.AllArgsConstructor;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
 
@@ -23,7 +23,7 @@ public class MessagingController {
     }
 
     @SubscribeMapping("/messages")
-    public List<Message> getMessages(Principal principal, SimpMessageHeaderAccessor headerAccessor) {
-        return messagingService.getMessagesByUserId(principal, headerAccessor);
+    public List<MessageDTO> getMessages(@Header(name = "conversationId") Long conversationId, Principal principal) throws Exception {
+        return messagingService.handleConversationDataRequest(principal, conversationId);
     }
 }
