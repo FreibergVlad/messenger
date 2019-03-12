@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@EntityScan(basePackages = {"model"})
-@EnableJpaRepositories(basePackages = "dao")
+@EntityScan(basePackages = {"model", "com.freiberg.model"})
+@EnableJpaRepositories(basePackages = {"dao", "com.freiberg.dao"})
 public class MessagingServerApplication {
 
 	public static void main(String[] args) {
