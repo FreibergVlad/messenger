@@ -12,7 +12,7 @@
     <div *ngIf="!selectedTabId" class="no-dialogs-selected">
       <p>Please select dialog to start messaging</p>
     </div>
-    <router-outlet name="conversation"></router-outlet>
+    <router-outlet (activate)="messagesComponent = $event" name="conversation"></router-outlet>
     <div *ngIf="selectedTabId" class="bottom-panel-wrap">
       <app-bottom-panel (messageSent)="onMessageSent($event)"></app-bottom-panel>
     </div>

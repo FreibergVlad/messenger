@@ -1,5 +1,6 @@
 package com.freiberg.service.impl;
 
+import com.freiberg.connection.ConnectionManager;
 import com.freiberg.dao.MessageDao;
 import com.freiberg.model.DialogPreview;
 import com.freiberg.model.Message;
@@ -11,13 +12,16 @@ import lombok.AllArgsConstructor;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -30,6 +34,9 @@ public class MessagingServiceImpl implements MessagingService {
     private UserDao userDao;
     private MessageDao messageDao;
 
+    private ConnectionManager connectionManager;
+
+    private SimpMessageSendingOperations messagingTemplate;
     private RequestValidator requestValidator;
 
     @Override
@@ -68,8 +75,33 @@ public class MessagingServiceImpl implements MessagingService {
     }
 
     @Override
-    public void handleChatCommunicationMessage(Principal principal, MessageDTO message) throws Exception {
-        System.out.println(message);
+    public void handleChatCommunicationMessage(Principal principal, MessageDTO messageDto) throws Exception {
+        if (!Objects.equals(messageDto.getSenderUsername(), principal.getName())) {
+            throw new Exception();
+        }
+        User sender = userDao.findByUsername(messageDto.getSenderUsername());
+        User receiver = userDao.findByUsername(messageDto.getReceiverUsername());
+        String messageText = messageDto.getMessageText();
+        if (sender == null || receiver == null) {
+            throw new Exception();
+        }
+        if (!sender.getContacts().contains(receiver)) {
+            throw new Exception();
+        }
+        Message message = new Message();
+        message.setSender(sender);
+        message.setReceiver(receiver);
+        message.setMessageText(messageText);
+        message.setMessageType(messageDto.getMessageType());
+        message.setTimestamp(new Date());
+        if (!connectionManager.hasActiveConnection(receiver)) {
+            message.setPending(true);
+            messageDao.save(message);
+        } else {
+            messageDao.save(message);
+            sendMessage(receiver, message);
+        }
+        sendMessage(sender, message);
     }
 
     private List<Message> getAllConversationData(User sender, User receiver) {
@@ -79,5 +111,9 @@ public class MessagingServiceImpl implements MessagingService {
         messages.addAll(sentMessages);
         messages.addAll(receivedMessages);
         return messages;
+    }
+
+    private void sendMessage(User dest, Message message) {
+        messagingTemplate.convertAndSendToUser(dest.getUsername(), "/queue/messages", message.toDTO());
     }
 }

@@ -26,6 +26,10 @@ export class MessagesComponent implements OnInit {
     });
   }
 
+  onMessageReceived(message: Message) {
+    this.messages.push(message);
+  }
+
   /**
    * Returns true if messages[index] and messages[index - 1] were sent in
    * different days. If it's, then we need to insert the date separator

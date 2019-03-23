@@ -29,6 +29,10 @@ export class MessagingService {
     return this.subscribe(Config.MESSAGING_CONFIG.getMessagesURL, headers);
   }
 
+  listenForMessages(): Observable<IMessage> {
+    return this.stompService.watch(Config.MESSAGING_CONFIG.listenForMessagesURL);
+  }
+
   sendChatCommunicationMessage(messageText: string, receiverUsername: string): void {
     const message = new Message();
     message.senderUsername = this.authService.getUsername();
