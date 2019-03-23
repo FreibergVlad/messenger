@@ -13,5 +13,8 @@
       <p>Please select dialog to start messaging</p>
     </div>
     <router-outlet name="conversation"></router-outlet>
+    <div *ngIf="selectedTabId" class="bottom-panel-wrap">
+      <app-bottom-panel></app-bottom-panel>
+    </div>
   </div>
 </div>
