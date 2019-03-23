@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {InjectableRxStompConfig, RxStompService} from '@stomp/ng2-stompjs';
 import {AuthService} from '../auth/auth.service';
 import {Config} from '../../config/config';
 import {Observable} from 'rxjs';
 import {IMessage, StompHeaders} from '@stomp/stompjs';
+import {Message, MessageType} from '../../models/message';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,22 @@ export class MessagingService {
     const headers: StompHeaders = {};
     headers.conversationId = conversationId.toString();
     return this.subscribe(Config.MESSAGING_CONFIG.getMessagesURL, headers);
+  }
+
+  sendChatCommunicationMessage(messageText: string, receiverUsername: string): void {
+    const message = new Message();
+    message.senderUsername = this.authService.getUsername();
+    message.receiverUsername = receiverUsername;
+    message.messageText = messageText;
+    message.messageType = MessageType.CHAT_COMMUNICATION;
+    this.sendMessage(message);
+  }
+
+  sendMessage(message: Message): void {
+    this.stompService.publish({
+      destination: Config.MESSAGING_CONFIG.chatCommunicationUrl,
+      body: JSON.stringify(message)
+    });
   }
 
   /**

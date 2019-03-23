@@ -39,6 +39,16 @@ export class DialogsComponent implements OnInit, AfterViewInit {
     });
   }
 
+  onMessageSent(message: string) {
+    if (this.selectedTabId) {
+      const receiverUsername: string = this.dialogsList
+        .find(dialog => dialog.userId === this.selectedTabId).username;
+      if (receiverUsername) {
+        this.messagingService.sendChatCommunicationMessage(message, receiverUsername);
+      }
+    }
+  }
+
   changeDialog(tabId: number): void {
     this.selectedTabId = tabId;
   }

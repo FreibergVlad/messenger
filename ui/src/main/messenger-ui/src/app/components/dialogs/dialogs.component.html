@@ -14,7 +14,7 @@
     </div>
     <router-outlet name="conversation"></router-outlet>
     <div *ngIf="selectedTabId" class="bottom-panel-wrap">
-      <app-bottom-panel></app-bottom-panel>
+      <app-bottom-panel (messageSent)="onMessageSent($event)"></app-bottom-panel>
     </div>
   </div>
 </div>

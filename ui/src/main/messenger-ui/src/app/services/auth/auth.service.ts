@@ -32,6 +32,17 @@ export class AuthService implements CanActivate {
     return this.oauthService.getAccessToken();
   }
 
+  /**
+   * Obtains username from JWT token
+   */
+  getUsername(): string {
+    const accessToken = this.getAccessToken();
+    const base64 = accessToken.split('.')[1]
+      .replace(/-/g, '+')
+      .replace(/_/g, '/');
+    return JSON.parse(atob(base64)).user_name;
+  }
+
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):
     Observable<boolean | UrlTree> | Promise<boolean | UrlTree>
     | boolean | UrlTree {
