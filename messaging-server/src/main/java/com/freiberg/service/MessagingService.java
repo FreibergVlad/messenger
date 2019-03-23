@@ -11,4 +11,6 @@ public interface MessagingService {
     List<DialogPreview> getContacts(Principal principal);
 
     List<MessageDTO> handleConversationDataRequest(Principal principal, Long conversationId) throws Exception;
+
+    void handleChatCommunicationMessage(Principal principal, MessageDTO message) throws Exception;
 }

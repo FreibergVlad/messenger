@@ -67,6 +67,11 @@ public class MessagingServiceImpl implements MessagingService {
         }
     }
 
+    @Override
+    public void handleChatCommunicationMessage(Principal principal, MessageDTO message) throws Exception {
+        System.out.println(message);
+    }
+
     private List<Message> getAllConversationData(User sender, User receiver) {
         List<Message> messages = new ArrayList<>();
         List<Message> sentMessages = messageDao.findMessageBySenderEqualsAndReceiverEquals(sender, receiver);

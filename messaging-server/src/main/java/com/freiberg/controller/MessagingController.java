@@ -5,6 +5,7 @@ import com.freiberg.model.MessageDTO;
 import com.freiberg.service.MessagingService;
 import lombok.AllArgsConstructor;
 import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
 
@@ -25,5 +26,10 @@ public class MessagingController {
     @SubscribeMapping("/messages")
     public List<MessageDTO> getMessages(@Header(name = "conversationId") Long conversationId, Principal principal) throws Exception {
         return messagingService.handleConversationDataRequest(principal, conversationId);
+    }
+
+    @MessageMapping("/chat.communication")
+    public void sendMessage(Principal principal, MessageDTO message) throws Exception {
+        messagingService.handleChatCommunicationMessage(principal, message);
     }
 }
