@@ -43,4 +43,19 @@ export class MessagesComponent implements OnInit {
     return  currentDate !== previousDate;
   }
 
+  /**
+   * Returns false if messages[index] and messages[index - 1] were sent by the different users,
+   * or they were sent in different days. In that case we don't need to show user avatar and it's username
+   *
+   * @see isNewDay
+   */
+  private isShortMessageFormat(index: number) {
+    if (this.isNewDay(index)) {
+      return false;
+    }
+    const currentMessage = this.messages[index];
+    const previousMessage = this.messages[index - 1];
+    return currentMessage.senderUsername === previousMessage.senderUsername;
+  }
+
 }

@@ -10,6 +10,7 @@ export class MessageComponent implements OnInit {
 
   @Input() message: Message;
   @Input() isNewDay: false;
+  @Input() isShortFormat: false;
 
   constructor() { }
 

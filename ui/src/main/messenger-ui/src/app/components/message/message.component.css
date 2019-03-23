@@ -21,6 +21,10 @@
   font: 13px/18px Tahoma,sans-serif,Arial,Helvetica;
 }
 
+.short-format {
+  margin-left: 140px;
+}
+
 .date-separator {
   display: flex;
   justify-content: center;
