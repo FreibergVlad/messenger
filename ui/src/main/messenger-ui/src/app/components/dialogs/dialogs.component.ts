@@ -10,6 +10,7 @@ import {MessagingService} from '../../services/messaging/messaging.service';
 import {ActivatedRoute} from '@angular/router';
 import {Message} from '../../models/message';
 import {MessagesComponent} from '../messages/messages.component';
+import {Location} from '@angular/common';
 
 @Component({
   selector: 'app-dialogs',
@@ -27,9 +28,13 @@ export class DialogsComponent implements OnInit, AfterViewInit {
 
   constructor(private authService: AuthService,
               private messagingService: MessagingService,
+              private location: Location,
               private route: ActivatedRoute) {}
 
   ngOnInit(): void {
+    this.location.subscribe((params) => {
+      this.onURLPopState(params);
+    });
     this.messagingService.getDialogsList().subscribe((resp) => {
       this.dialogsList = JSON.parse(resp.body);
     });
@@ -40,7 +45,7 @@ export class DialogsComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     setTimeout(() => {
-      const currentDialog = this.getConversationIdFromUrl();
+      const currentDialog = this.getConversationIdFromActivatedRoute();
       if (currentDialog) {
         this.changeDialog(Number(currentDialog));
       }
@@ -73,7 +78,20 @@ export class DialogsComponent implements OnInit, AfterViewInit {
     this.selectedTabId = tabId;
   }
 
-  private getConversationIdFromUrl(): number {
+  /**
+   * We need to refresh current tab in case when
+   * user changes browsing history
+   */
+  private onURLPopState(params): void {
+    const match: RegExpMatchArray = params.url.match(/\/dialogs\/\(conversation:(\d)\)/);
+    if (Array.isArray(match) && match[1] && !isNaN(Number(match[1]))) {
+      this.selectedTabId = Number(match[1]);
+    } else {
+      this.selectedTabId = null;
+    }
+  }
+
+  private getConversationIdFromActivatedRoute(): number {
     return this.route.firstChild && this.route.firstChild.snapshot.params.conversationId;
   }
 
