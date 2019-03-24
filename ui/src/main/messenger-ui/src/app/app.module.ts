@@ -17,6 +17,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { FormsModule } from '@angular/forms';
 import { UserAvatarComponent } from './components/user-avatar/user-avatar.component';
 import { RxStompService } from '@stomp/ng2-stompjs';
+import { DomChangeDirective } from './directives/dom-change/dom-change.directive';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { RxStompService } from '@stomp/ng2-stompjs';
     MessagesComponent,
     MessageComponent,
     BottomPanelComponent,
-    UserAvatarComponent
+    UserAvatarComponent,
+    DomChangeDirective
   ],
   imports: [
     BrowserModule,

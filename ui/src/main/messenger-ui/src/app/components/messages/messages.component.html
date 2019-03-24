@@ -1,5 +1,5 @@
 <div class="col-md-12 row messages-wrap">
-  <div class="message-history-wrap">
+  <div class="message-history-wrap" appDomChange (domChange)="scrollToEnd()">
     <p-scrollPanel #scrollPanel styleClass="messages-scroll-bar"
                    [style]="{width: '100%', height: '100%'}"
                    [class.scroll-bar-visible]="scrollPanel.scrollTop > 0">

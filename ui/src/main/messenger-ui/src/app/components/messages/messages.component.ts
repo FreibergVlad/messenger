@@ -1,7 +1,8 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {MessagingService} from '../../services/messaging/messaging.service';
 import {Message} from '../../models/message';
+import {ScrollPanel} from 'primeng/primeng';
 
 @Component({
   selector: 'app-messages',
@@ -13,6 +14,9 @@ export class MessagesComponent implements OnInit {
 
   conversationId?: number = null;
   messages: Message[] = [];
+
+  @ViewChild(ScrollPanel)
+  scrollPanel: ScrollPanel;
 
   constructor(private route: ActivatedRoute,
               private messagingService: MessagingService) { }
@@ -56,6 +60,10 @@ export class MessagesComponent implements OnInit {
     const currentMessage = this.messages[index];
     const previousMessage = this.messages[index - 1];
     return currentMessage.senderUsername === previousMessage.senderUsername;
+  }
+
+  private scrollToEnd() {
+    this.scrollPanel.scrollTop(this.scrollPanel.contentViewChild.nativeElement.scrollHeight);
   }
 
 }
