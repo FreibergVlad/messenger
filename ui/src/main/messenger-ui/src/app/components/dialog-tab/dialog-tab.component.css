@@ -55,3 +55,30 @@
   font-size: 13px;
   font-weight: 400;
 }
+
+@media (max-width: 768px) {
+
+  .dialog-tab-container {
+    padding-left: 0;
+    padding-right: 0;
+    border-bottom: 1px solid rgb(238, 238, 238);
+  }
+
+  .avatar-container {
+    padding-right: 0;
+  }
+
+  .dialog-preview-container {
+    padding-left: 0;
+    padding-top: 10px;
+  }
+
+  .dialog-last-message {
+    font-size: 18px;
+  }
+
+  :host(:not(.selected)) .dialog-name {
+    font-size: 18px;
+  }
+
+}

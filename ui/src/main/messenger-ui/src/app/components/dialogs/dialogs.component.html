@@ -1,5 +1,5 @@
-<div class="main col-md-10 offset-md-1 row">
-  <div class="container dialog-tabs col-md-3">
+<div class="main col-md-10 col-xs-12 offset-md-1 offset-xs-0 row">
+  <div *ngIf="!(isMobile && selectedTabId) || !isMobile" class="container dialog-tabs col-md-3 col-xs-12">
     <p-scrollPanel styleClass="scroll-bar" [style]="{width: '100%', height: '100%'}">
       <app-dialog-tab [routerLink]="['/dialogs', { outlets: { 'conversation': [tab.userId]}}]"
                       *ngFor="let tab of dialogsList" [dialogPreview]="tab"
@@ -8,7 +8,7 @@
       </app-dialog-tab>
     </p-scrollPanel>
   </div>
-  <div class="container dialog-messages col-md-9">
+  <div *ngIf="!(isMobile && !selectedTabId) || !isMobile" class="container dialog-messages col-md-9">
     <div *ngIf="!selectedTabId" class="no-dialogs-selected">
       <p>Please select dialog to start messaging</p>
     </div>

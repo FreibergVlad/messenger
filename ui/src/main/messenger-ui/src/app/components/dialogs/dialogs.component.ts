@@ -11,6 +11,7 @@ import {ActivatedRoute} from '@angular/router';
 import {Message} from '../../models/message';
 import {MessagesComponent} from '../messages/messages.component';
 import {Location} from '@angular/common';
+import {Capabilities} from '../../services/utils/capabilities';
 
 @Component({
   selector: 'app-dialogs',
@@ -23,6 +24,8 @@ export class DialogsComponent implements OnInit, AfterViewInit {
   dialogsList: DialogPreview[] = [];
   selectedTabId?: number = null;
 
+  private isMobile = false;
+
   @ViewChild(MessagesComponent)
   messagesComponent: MessagesComponent;
 
@@ -32,6 +35,7 @@ export class DialogsComponent implements OnInit, AfterViewInit {
               private route: ActivatedRoute) {}
 
   ngOnInit(): void {
+    this.isMobile = Capabilities.isMobile();
     this.location.subscribe((params) => {
       this.onURLPopState(params);
     });

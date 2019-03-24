@@ -18,3 +18,11 @@
   margin-top: 10px;
   margin-left: 80px;
 }
+
+@media (max-width: 768px) {
+
+  .avatar-circle {
+    width: 65px;
+    height: 65px;
+  }
+}
