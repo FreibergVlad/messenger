@@ -48,7 +48,8 @@ public class MessagingServiceImpl implements MessagingService {
 
         contacts.forEach(contact -> {
             Message lastReceivedMessage = messageDao.findFirstBySenderEqualsAndReceiverEqualsOrderByTimestampDesc(contact, user);
-            dialogPreviews.add(new DialogPreview(contact.getId(), contact.getUsername(), lastReceivedMessage.getMessageText()));
+            dialogPreviews.add(new DialogPreview(contact.getId(), contact.getUsername(),
+                    lastReceivedMessage.getMessageText(), lastReceivedMessage.getTimestamp()));
         });
 
         return dialogPreviews;

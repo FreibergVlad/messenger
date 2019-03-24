@@ -2,12 +2,20 @@
   <div class="col-lg-3 col-md-3 col-sm-3 col-3 avatar-container">
     <app-user-avatar [username]="dialogPreview.username"></app-user-avatar>
   </div>
-  <div class="col-lg-9 col-md-9 col-sm-9 col-9 dialog-preview-container">
+  <div class="col-lg-7 col-md-7 col-sm-7 col-7 dialog-preview-container">
     <div class="dialog-name">
       <span>{{dialogPreview.username}}</span>
     </div>
     <div class="dialog-last-message">
       <span>{{dialogPreview.lastMessage}}</span>
     </div>
+  </div>
+  <div class="dialog-meta-info col-lg-2 col-md-2 col-sm-2 col-2">
+    <div class="dialog-date">
+      {{dialogPreview.timestamp | date:'shortTime'}}
+    </div>
+    <span *ngIf="unreadMessagesCount > 0" class="unread-count">
+      {{unreadMessagesCount}}
+    </span>
   </div>
 </div>

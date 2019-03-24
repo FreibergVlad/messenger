@@ -9,6 +9,7 @@ import {DialogPreview} from '../../models/dialog-preview';
 export class DialogTabComponent implements OnInit {
 
   @Input() dialogPreview: DialogPreview;
+  @Input() unreadMessagesCount = 0;
 
   constructor() { }
 
