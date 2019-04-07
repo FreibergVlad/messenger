@@ -3,8 +3,8 @@ import {InjectableRxStompConfig} from '@stomp/ng2-stompjs';
 
 export class Config {
 
-  static readonly AUTH_SERVER_URL = 'https://localhost:8443';
-  static readonly MESSAGING_SERVER_URL = 'wss://localhost:7443/ws-gateway';
+  static readonly AUTH_SERVER_URL = 'https://auth-server.com';
+  static readonly MESSAGING_SERVER_URL = 'wss://messaging-server.com/ws-gateway';
 
   static readonly APP_DEST_PREFIX = '/api';
 

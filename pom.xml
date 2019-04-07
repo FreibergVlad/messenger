@@ -29,6 +29,7 @@
 		<module>messaging-server</module>
 		<module>auth-server</module>
         <module>commons</module>
+        <module>local-deployment</module>
     </modules>
 
 	<dependencies>
