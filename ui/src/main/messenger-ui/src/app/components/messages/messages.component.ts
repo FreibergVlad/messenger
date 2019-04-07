@@ -34,6 +34,10 @@ export class MessagesComponent implements OnInit {
     this.messages.push(message);
   }
 
+  scrollToEnd() {
+    this.scrollPanel.scrollTop(this.scrollPanel.contentViewChild.nativeElement.scrollHeight);
+  }
+
   /**
    * Returns true if messages[index] and messages[index - 1] were sent in
    * different days. If it's, then we need to insert the date separator
@@ -60,10 +64,6 @@ export class MessagesComponent implements OnInit {
     const currentMessage = this.messages[index];
     const previousMessage = this.messages[index - 1];
     return currentMessage.senderUsername === previousMessage.senderUsername;
-  }
-
-  private scrollToEnd() {
-    this.scrollPanel.scrollTop(this.scrollPanel.contentViewChild.nativeElement.scrollHeight);
   }
 
 }

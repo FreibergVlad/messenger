@@ -1,9 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  OnInit, ViewChild,
-  ViewEncapsulation
-} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {AuthService} from '../../services/auth/auth.service';
 import {DialogPreview} from '../../models/dialog-preview';
 import {MessagingService} from '../../services/messaging/messaging.service';
@@ -24,7 +19,7 @@ export class DialogsComponent implements OnInit, AfterViewInit {
   dialogsList: DialogPreview[] = [];
   selectedTabId?: number = null;
 
-  private isMobile = false;
+  isMobile = false;
 
   @ViewChild(MessagesComponent)
   messagesComponent: MessagesComponent;
@@ -40,7 +35,9 @@ export class DialogsComponent implements OnInit, AfterViewInit {
       this.onURLPopState(params);
     });
     this.messagingService.getDialogsList().subscribe((resp) => {
-      this.dialogsList = JSON.parse(resp.body);
+      this.dialogsList = JSON.parse(resp.body).map((dialogDto) => {
+        return new DialogPreview(dialogDto.userId, dialogDto.username, dialogDto.lastMessage, dialogDto.timestamp);
+      });
     });
     this.messagingService.listenForMessages().subscribe((resp) => {
       this.onMessageReceived(JSON.parse(resp.body));
@@ -68,18 +65,29 @@ export class DialogsComponent implements OnInit, AfterViewInit {
 
   onMessageReceived(message: Message) {
     const currentDialog = this.getCurrentDialog();
+    const targetDialog = this.getDialogByUsername(message.senderUsername);
     if (this.isAcknowledgeMessage(message)) {
       this.messagesComponent.onMessageReceived(message);
+    } else if (!currentDialog) {
+      if (this.authService.getUsername() !== message.senderUsername) {
+        targetDialog.updateWithMessage(message);
+        targetDialog.unreadCount++;
+      }
     } else if (currentDialog.username === message.senderUsername) {
       this.messagesComponent.onMessageReceived(message);
-      currentDialog.lastMessage = message.messageText;
+      currentDialog.updateWithMessage(message);
     } else {
-      // TODO Handling of messages received for inactive conversations
+      targetDialog.unreadCount++;
+      targetDialog.updateWithMessage(message);
     }
   }
 
   changeDialog(tabId: number): void {
     this.selectedTabId = tabId;
+    const currentDialog = this.getCurrentDialog();
+    if (currentDialog) {
+      currentDialog.unreadCount = 0;
+    }
   }
 
   /**
@@ -110,6 +118,10 @@ export class DialogsComponent implements OnInit, AfterViewInit {
 
   private getCurrentDialog(): DialogPreview {
     return this.dialogsList.find((dialog) => dialog.userId === this.selectedTabId);
+  }
+
+  private getDialogByUsername(username: string): DialogPreview {
+    return this.dialogsList.find((dialog) => dialog.username === username);
   }
 
 }

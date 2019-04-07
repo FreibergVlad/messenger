@@ -14,8 +14,8 @@
     <div class="dialog-date">
       {{dialogPreview.timestamp | date:'shortTime'}}
     </div>
-    <span *ngIf="unreadMessagesCount > 0" class="unread-count">
-      {{unreadMessagesCount}}
+    <span *ngIf="dialogPreview.unreadCount > 0" class="unread-count">
+      {{dialogPreview.unreadCount}}
     </span>
   </div>
 </div>
