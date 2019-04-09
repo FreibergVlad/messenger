@@ -1,7 +1,7 @@
-INSERT INTO allowed_origins (url) VALUES ('localhost:4200');
+INSERT INTO allowed_origins (url) VALUES ('https://ui-server.com');
 
 INSERT INTO oauth_client_details (client_id, authorized_grant_types, scope, autoapprove, web_server_redirect_uri)
-  VALUES ('testClientId', 'implicit', 'read,write', 'true', 'localhost:4200');
+  VALUES ('testClientId', 'implicit', 'read,write', 'true', 'https://ui-server.com');
 
 INSERT INTO `users` (userID, username, password, lastLogin, locked)
   VALUES (1, 'vladislav','$2a$11$p8QNJScZapEtVA447zHg1eqJ78.8WkxMa6jr6D5htl/T0k.MJ4Pdi',NULL,0);
