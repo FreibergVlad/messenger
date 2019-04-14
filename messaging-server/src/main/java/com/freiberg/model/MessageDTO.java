@@ -11,6 +11,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class MessageDTO {
 
+    private String messageId;
     private String senderUsername;
     private String receiverUsername;
     private Date timestamp;

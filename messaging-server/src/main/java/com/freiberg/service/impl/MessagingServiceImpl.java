@@ -47,9 +47,15 @@ public class MessagingServiceImpl implements MessagingService {
         List<DialogPreview> dialogPreviews = new ArrayList<>();
 
         contacts.forEach(contact -> {
+            DialogPreview dialogPreview = new DialogPreview();
+            dialogPreview.setUserId(contact.getId());
+            dialogPreview.setUsername(contact.getUsername());
             Message lastReceivedMessage = messageDao.findFirstBySenderEqualsAndReceiverEqualsOrderByTimestampDesc(contact, user);
-            dialogPreviews.add(new DialogPreview(contact.getId(), contact.getUsername(),
-                    lastReceivedMessage.getMessageText(), lastReceivedMessage.getTimestamp()));
+            if (lastReceivedMessage != null) {
+                dialogPreview.setLastMessage(lastReceivedMessage.getMessageText());
+                dialogPreview.setTimestamp(lastReceivedMessage.getTimestamp());
+            }
+            dialogPreviews.add(dialogPreview);
         });
 
         return dialogPreviews;
@@ -93,7 +99,6 @@ public class MessagingServiceImpl implements MessagingService {
         message.setSender(sender);
         message.setReceiver(receiver);
         message.setMessageText(messageText);
-        message.setMessageType(messageDto.getMessageType());
         message.setTimestamp(new Date());
         if (!connectionManager.hasActiveConnection(receiver)) {
             message.setPending(true);

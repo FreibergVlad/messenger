@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import utils.UniqueID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,7 +19,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Date;
 import java.util.Set;
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -28,7 +28,7 @@ public class User {
 
     public User(String username, String password,
                 Date lastLogin, boolean locked, Set<Role> roles, Set<User> contacts) {
-        this.publicUserId = UUID.randomUUID().toString();
+        this.publicUserId = UniqueID.getUniqueId();
         this.username = username;
         this.password = password;
         this.lastLogin = lastLogin;
