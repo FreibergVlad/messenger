@@ -5,7 +5,8 @@ DROP TABLE IF EXISTS users;
 -- Table: users
 CREATE TABLE users (
   userID   INT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  username VARCHAR(255) NOT NULL,
+  publicUserId VARCHAR(255) NOT NULL UNIQUE,
+  username VARCHAR(255) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL,
   lastLogin DATETIME,
   locked BOOLEAN DEFAULT FALSE
@@ -43,12 +44,12 @@ CREATE TABLE user_roles (
   ENGINE = InnoDB;
 
 CREATE TABLE messages (
-  messageId INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  messageId VARCHAR(255) NOT NULL PRIMARY KEY UNIQUE ,
   senderId INT,
   receiverId INT,
   messageText LONGTEXT,
   messageType VARCHAR(255),
-  isPending TINYINT,
+  pending TINYINT,
   timestamp DATETIME DEFAULT now(),
 
   FOREIGN KEY (senderId) REFERENCES users (userID),

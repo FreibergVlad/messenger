@@ -2,7 +2,8 @@ package com.freiberg.authserver.controller;
 
 import com.freiberg.authserver.service.UserService;
 import lombok.AllArgsConstructor;
-import model.UserDto;
+import com.freiberg.authserver.model.RegistrationDTO;
+import model.UserDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +26,8 @@ public class RegistrationController {
 
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDto registerUser(@Valid @RequestBody UserDto userDto) {
-        return userService.handleRegistrationRequest(userDto);
+    public UserDTO registerUser(@Valid @RequestBody RegistrationDTO registrationDTO) {
+        return userService.handleRegistrationRequest(registrationDTO);
     }
 
     @ExceptionHandler(BindException.class)

@@ -1,11 +1,11 @@
-package model;
+package com.freiberg.authserver.model;
 
+import com.freiberg.authserver.validation.PasswordMatches;
+import com.freiberg.authserver.validation.UsernameUnique;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
-import validation.PasswordMatches;
-import validation.UsernameUnique;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @PasswordMatches
-public class UserDto {
+public class RegistrationDTO {
 
     @NotNull(message = "Username must be not null!")
     @NotEmpty(message = "Username must be not empty!")

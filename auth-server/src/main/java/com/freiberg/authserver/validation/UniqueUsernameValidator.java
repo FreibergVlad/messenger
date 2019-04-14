@@ -1,4 +1,4 @@
-package validation;
+package com.freiberg.authserver.validation;
 
 import dao.UserDao;
 import lombok.AllArgsConstructor;

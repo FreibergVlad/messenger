@@ -5,7 +5,8 @@ import dao.UserDao;
 import lombok.AllArgsConstructor;
 import model.Role;
 import model.User;
-import model.UserDto;
+import com.freiberg.authserver.model.RegistrationDTO;
+import model.UserDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,20 +28,20 @@ public class UserService {
 
     private final static String DEFAULT_ROLE = "ROLE_USER";
 
-    public UserDto handleRegistrationRequest(UserDto userDto) {
-        User user = createUserAccount(userDto);
+    public UserDTO handleRegistrationRequest(RegistrationDTO registrationDTO) {
+        User user = createUserAccount(registrationDTO);
         logger.info("Created new account: " + user);
-        return userDto;
+        return user.toDto();
     }
 
-    private User createUserAccount(UserDto userDto) {
+    private User createUserAccount(RegistrationDTO registrationDTO) {
         Set<Role> roles = new HashSet<>(Collections.singletonList(roleDao.findByName(DEFAULT_ROLE)));
-        return createUserAccount(userDto, roles);
+        return createUserAccount(registrationDTO, roles);
     }
 
-    private User createUserAccount(UserDto userDto, Set<Role> roles) {
-        String username = userDto.getUsername();
-        String passHash = passwordEncoder.encode(userDto.getPassword());
+    private User createUserAccount(RegistrationDTO registrationDTO, Set<Role> roles) {
+        String username = registrationDTO.getUsername();
+        String passHash = passwordEncoder.encode(registrationDTO.getPassword());
         User user = new User();
         user.setUsername(username);
         user.setPassword(passHash);

@@ -1,4 +1,4 @@
-package validation;
+package com.freiberg.authserver.validation;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
