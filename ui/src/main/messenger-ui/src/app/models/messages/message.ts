@@ -1,4 +1,4 @@
-import {MessageType} from './message-types';
+import {MessageType} from '../message-types';
 
 export abstract class Message {
 

@@ -1,8 +1,9 @@
 import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {MessagingService} from '../../services/messaging/messaging.service';
-import {Message} from '../../models/message';
 import {ScrollPanel} from 'primeng/primeng';
+import {ChatCommunicationMessage} from '../../models/messages/chat-communication-message';
+import {ConversationDataRequest} from '../../models/messages/conversation-data-request';
 
 @Component({
   selector: 'app-messages',
@@ -12,8 +13,8 @@ import {ScrollPanel} from 'primeng/primeng';
 })
 export class MessagesComponent implements OnInit {
 
-  conversationId?: number = null;
-  messages: Message[] = [];
+  conversationId?: string = null;
+  messages: ChatCommunicationMessage[] = [];
 
   @ViewChild(ScrollPanel)
   scrollPanel: ScrollPanel;
@@ -23,14 +24,17 @@ export class MessagesComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-      this.conversationId = +params.conversationId;
-      this.messagingService.getMessagesByConversationId(this.conversationId).subscribe(resp => {
-        this.messages = JSON.parse(resp.body);
+      this.conversationId = params.conversationId;
+      const request = new ConversationDataRequest();
+      request.contactId = this.conversationId;
+      request.sort = 'timestamp';
+      this.messagingService.getConversationData(request).subscribe(response => {
+        this.messages = response.messages;
       });
     });
   }
 
-  onMessageReceived(message: Message) {
+  onMessageReceived(message: ChatCommunicationMessage) {
     this.messages.push(message);
   }
 
@@ -63,7 +67,7 @@ export class MessagesComponent implements OnInit {
     }
     const currentMessage = this.messages[index];
     const previousMessage = this.messages[index - 1];
-    return currentMessage.senderUsername === previousMessage.senderUsername;
+    return currentMessage.sender.username === previousMessage.sender.username;
   }
 
 }

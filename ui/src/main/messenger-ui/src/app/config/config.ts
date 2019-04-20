@@ -25,10 +25,11 @@ export class Config {
   };
 
   static readonly MESSAGING_CONFIG = {
-    getContactsListURL: `${Config.APP_DEST_PREFIX}/contacts`,
-    getMessagesURL: `${Config.APP_DEST_PREFIX}/messages`,
+    getContactsListURL: `${Config.APP_DEST_PREFIX}/getContacts`,
+    getDialogsPreviewsURL: `${Config.APP_DEST_PREFIX}/getDialogsPreview`,
+    getMessagesURL: `${Config.APP_DEST_PREFIX}/getMessageHistory`,
     listenForMessagesURL: '/user/queue/messages',
-    chatCommunicationUrl: `${Config.APP_DEST_PREFIX}/chat.communication`
+    chatCommunicationUrl: `${Config.APP_DEST_PREFIX}/sendMessage`
   };
 
 }

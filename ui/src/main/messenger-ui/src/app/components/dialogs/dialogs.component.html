@@ -1,10 +1,10 @@
 <div class="main col-md-10 col-xs-12 offset-md-1 offset-xs-0 row">
   <div *ngIf="!(isMobile && selectedTabId) || !isMobile" class="container dialog-tabs col-md-3 col-xs-12">
     <p-scrollPanel styleClass="scroll-bar" [style]="{width: '100%', height: '90%'}">
-      <app-dialog-tab [routerLink]="['/dialogs', { outlets: { 'conversation': [tab.userId]}}]"
+      <app-dialog-tab [routerLink]="['/dialogs', { outlets: { 'conversation': [tab.contact.userId]}}]"
                       *ngFor="let tab of dialogsList" [dialogPreview]="tab"
-                      (click)="changeDialog(tab.userId)"
-                      [class.selected]="selectedTabId === tab.userId">
+                      (click)="changeDialog(tab.contact.userId)"
+                      [class.selected]="selectedTabId === tab.contact.userId">
       </app-dialog-tab>
     </p-scrollPanel>
   </div>

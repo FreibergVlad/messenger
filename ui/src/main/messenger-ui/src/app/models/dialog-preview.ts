@@ -1,24 +1,16 @@
-import {Message} from './message';
+import {User} from './user';
+import {ChatCommunicationMessage} from './messages/chat-communication-message';
 
 export class DialogPreview {
 
-  userId: number;
-  username: string;
-  lastMessage: string;
-  timestamp: number;
+  contact: User;
+  lastMessage: ChatCommunicationMessage;
   unreadCount: number;
 
-  constructor(userId, username, lastMessage, timestamp, unreadCount = 0) {
-    this.userId = userId;
-    this.username = username;
+  constructor(contact, lastMessage, unreadCount = 0) {
+    this.contact = contact;
     this.lastMessage = lastMessage;
-    this.timestamp = timestamp;
     this.unreadCount = unreadCount;
-  }
-
-  public updateWithMessage(message: Message) {
-    this.lastMessage = message.messageText;
-    this.timestamp = message.timestamp;
   }
 
 }

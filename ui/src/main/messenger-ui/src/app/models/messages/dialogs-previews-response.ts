@@ -1,6 +1,6 @@
 import {Message} from './message';
-import {MessageType} from './message-types';
-import {DialogPreview} from './dialog-preview';
+import {MessageType} from '../message-types';
+import {DialogPreview} from '../dialog-preview';
 
 export class DialogsPreviewsResponse extends Message {
 

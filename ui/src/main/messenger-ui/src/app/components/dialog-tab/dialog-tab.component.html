@@ -1,13 +1,13 @@
 <div class="dialog-tab-container row col-lg-12 col-md-12 col-sm-12 col-12 ">
   <div class="col-lg-3 col-md-3 col-sm-3 col-3 avatar-container">
-    <app-user-avatar [username]="dialogPreview.username"></app-user-avatar>
+    <app-user-avatar [username]="dialogPreview.contact.username"></app-user-avatar>
   </div>
   <div class="col-lg-7 col-md-7 col-sm-7 col-7 dialog-preview-container">
     <div class="dialog-name">
-      <span>{{dialogPreview.username}}</span>
+      <span>{{dialogPreview.contact.username}}</span>
     </div>
     <div class="dialog-last-message">
-      <span>{{dialogPreview.lastMessage}}</span>
+      <span>{{dialogPreview.lastMessage?.messageText}}</span>
     </div>
   </div>
   <div class="dialog-meta-info col-lg-2 col-md-2 col-sm-2 col-2">

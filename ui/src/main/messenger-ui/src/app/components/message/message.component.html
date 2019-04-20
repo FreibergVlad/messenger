@@ -7,11 +7,11 @@
     </div>
     <div class="message-content row">
       <div *ngIf="!isShortFormat" class="user-photo col-md-2">
-        <app-user-avatar class="message-avatar" [username]="message.senderUsername"></app-user-avatar>
+        <app-user-avatar class="message-avatar" [username]="message.sender.username"></app-user-avatar>
       </div>
       <div class="message-body" [ngClass]="isShortFormat ? 'col-md-10' : 'col-md-8'">
         <span *ngIf="!isShortFormat"  class="message-author">
-          {{message.senderUsername}}
+          {{message.sender.username}}
         </span>
         <div class="message-text" [ngClass]="{'short-format': isShortFormat}">
           {{message.messageText}}

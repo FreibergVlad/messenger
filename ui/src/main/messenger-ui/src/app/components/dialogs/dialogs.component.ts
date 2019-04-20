@@ -3,10 +3,11 @@ import {AuthService} from '../../services/auth/auth.service';
 import {DialogPreview} from '../../models/dialog-preview';
 import {MessagingService} from '../../services/messaging/messaging.service';
 import {ActivatedRoute} from '@angular/router';
-import {Message} from '../../models/message';
 import {MessagesComponent} from '../messages/messages.component';
 import {Location} from '@angular/common';
 import {Capabilities} from '../../services/utils/capabilities';
+import {ChatCommunicationMessage} from '../../models/messages/chat-communication-message';
+import {User} from '../../models/user';
 
 @Component({
   selector: 'app-dialogs',
@@ -17,7 +18,7 @@ import {Capabilities} from '../../services/utils/capabilities';
 export class DialogsComponent implements OnInit, AfterViewInit {
 
   dialogsList: DialogPreview[] = [];
-  selectedTabId?: number = null;
+  selectedTabId?: string = null;
 
   isMobile = false;
 
@@ -34,13 +35,11 @@ export class DialogsComponent implements OnInit, AfterViewInit {
     this.location.subscribe((params) => {
       this.onURLPopState(params);
     });
-    this.messagingService.getDialogsList().subscribe((resp) => {
-      this.dialogsList = JSON.parse(resp.body).map((dialogDto) => {
-        return new DialogPreview(dialogDto.userId, dialogDto.username, dialogDto.lastMessage, dialogDto.timestamp);
-      });
+    this.messagingService.getDialogsPreviews().subscribe(response => {
+      this.dialogsList = response.dialogPreviews;
     });
-    this.messagingService.listenForMessages().subscribe((resp) => {
-      this.onMessageReceived(JSON.parse(resp.body));
+    this.messagingService.getChatMessages().subscribe(message => {
+      this.onMessageReceived(message);
     });
   }
 
@@ -48,41 +47,40 @@ export class DialogsComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       const currentDialog = this.getConversationIdFromActivatedRoute();
       if (currentDialog) {
-        this.changeDialog(Number(currentDialog));
+        this.changeDialog(currentDialog);
       }
     });
   }
 
   onMessageSent(message: string) {
     if (this.selectedTabId) {
-      const receiverUsername: string = this.dialogsList
-        .find(dialog => dialog.userId === this.selectedTabId).username;
-      if (receiverUsername) {
-        this.messagingService.sendChatCommunicationMessage(message, receiverUsername);
+      const receiver: User = this.getCurrentDialog().contact;
+      if (receiver) {
+        this.messagingService.sendChatCommunicationMessage(message, receiver);
       }
     }
   }
 
-  onMessageReceived(message: Message) {
+  onMessageReceived(message: ChatCommunicationMessage) {
     const currentDialog = this.getCurrentDialog();
-    const targetDialog = this.getDialogByUsername(message.senderUsername);
+    const targetDialog = this.getDialogByUsername(message.sender.username);
     if (this.isAcknowledgeMessage(message)) {
       this.messagesComponent.onMessageReceived(message);
     } else if (!currentDialog) {
-      if (this.authService.getUsername() !== message.senderUsername) {
-        targetDialog.updateWithMessage(message);
+      if (this.authService.getUsername() !== message.sender.username) {
+        targetDialog.lastMessage = message;
         targetDialog.unreadCount++;
       }
-    } else if (currentDialog.username === message.senderUsername) {
+    } else if (currentDialog.contact.username === message.sender.username) {
       this.messagesComponent.onMessageReceived(message);
-      currentDialog.updateWithMessage(message);
+      currentDialog.lastMessage = message;
     } else {
       targetDialog.unreadCount++;
-      targetDialog.updateWithMessage(message);
+      targetDialog.lastMessage = message;
     }
   }
 
-  changeDialog(tabId: number): void {
+  changeDialog(tabId?: string): void {
     this.selectedTabId = tabId;
     const currentDialog = this.getCurrentDialog();
     if (currentDialog) {
@@ -96,32 +94,32 @@ export class DialogsComponent implements OnInit, AfterViewInit {
    */
   private onURLPopState(params): void {
     const match: RegExpMatchArray = params.url.match(/\/dialogs\/\(conversation:(\d)\)/);
-    if (Array.isArray(match) && match[1] && !isNaN(Number(match[1]))) {
-      this.selectedTabId = Number(match[1]);
+    if (Array.isArray(match) && match[1]) {
+      this.changeDialog(match[1]);
     } else {
-      this.selectedTabId = null;
+      this.changeDialog(null);
     }
   }
 
-  private getConversationIdFromActivatedRoute(): number {
+  private getConversationIdFromActivatedRoute(): string {
     return this.route.firstChild && this.route.firstChild.snapshot.params.conversationId;
   }
 
-  private isAcknowledgeMessage(message: Message): boolean {
+  private isAcknowledgeMessage(message: ChatCommunicationMessage): boolean {
     const currentDialog = this.getCurrentDialog();
     if (currentDialog) {
-      return this.authService.getUsername() === message.senderUsername
-        && currentDialog.username === message.receiverUsername;
+      return this.authService.getUsername() === message.sender.username
+        && currentDialog.contact.username === message.receiver.username;
     }
     return false;
   }
 
   private getCurrentDialog(): DialogPreview {
-    return this.dialogsList.find((dialog) => dialog.userId === this.selectedTabId);
+    return this.dialogsList.find((dialog) => dialog.contact.userId === this.selectedTabId);
   }
 
   private getDialogByUsername(username: string): DialogPreview {
-    return this.dialogsList.find((dialog) => dialog.username === username);
+    return this.dialogsList.find((dialog) => dialog.contact.username === username);
   }
 
 }

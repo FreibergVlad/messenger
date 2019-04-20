@@ -2,9 +2,16 @@ import {Injectable} from '@angular/core';
 import {InjectableRxStompConfig, RxStompService} from '@stomp/ng2-stompjs';
 import {AuthService} from '../auth/auth.service';
 import {Config} from '../../config/config';
-import {Observable} from 'rxjs';
-import {IMessage, StompHeaders} from '@stomp/stompjs';
-import {Message, MessageType} from '../../models/message';
+import {Observable, Subject} from 'rxjs';
+import {IMessage} from '@stomp/stompjs';
+import {MessageRouter} from './message-router.service';
+import {MessageType} from '../../models/message-types';
+import {Message} from '../../models/messages/message';
+import {DialogsPreviewsResponse} from '../../models/messages/dialogs-previews-response';
+import {ChatCommunicationMessage} from '../../models/messages/chat-communication-message';
+import {User} from '../../models/user';
+import {ConversationDataResponse} from '../../models/messages/conversation-data-response';
+import {ConversationDataRequest} from '../../models/messages/conversation-data-request';
 
 @Injectable({
   providedIn: 'root'
@@ -12,39 +19,51 @@ import {Message, MessageType} from '../../models/message';
 export class MessagingService {
 
   constructor(private stompService: RxStompService,
-              private authService: AuthService) { }
+              private authService: AuthService,
+              private messageRouter: MessageRouter) {
+    this.messageRouter.registerSubjects();
+  }
 
   initMessaging() {
     this.stompService.configure(this.updateConfigWithAccessToken());
     this.stompService.activate();
+    this.listenForMessages().subscribe((resp) => {
+      const message: Message = JSON.parse(resp.body);
+      this.messageRouter.processMessage(message);
+    });
   }
 
-  getDialogsList(): Observable<IMessage> {
-    return this.subscribe(Config.MESSAGING_CONFIG.getContactsListURL);
+  getDialogsPreviews(): Subject<DialogsPreviewsResponse> {
+    this.sendMessage({}, Config.MESSAGING_CONFIG.getDialogsPreviewsURL);
+    return this.messageRouter.getMessageSubject(MessageType.DIALOGS_PREVIEWS_RESPONSE) as
+      Subject<DialogsPreviewsResponse>;
   }
 
-  getMessagesByConversationId(conversationId: number): Observable<IMessage> {
-    const headers: StompHeaders = {};
-    headers.conversationId = conversationId.toString();
-    return this.subscribe(Config.MESSAGING_CONFIG.getMessagesURL, headers);
+  getConversationData(request: ConversationDataRequest): Subject<ConversationDataResponse> {
+    this.sendMessage(request, Config.MESSAGING_CONFIG.getMessagesURL);
+    return this.messageRouter.getMessageSubject(MessageType.CONVERSATION_DATA_RESPONSE) as
+      Subject<ConversationDataResponse>;
   }
 
-  listenForMessages(): Observable<IMessage> {
+  getChatMessages() {
+    return this.messageRouter.getMessageSubject(MessageType.CHAT_COMMUNICATION) as
+      Subject<ChatCommunicationMessage>;
+  }
+
+  sendChatCommunicationMessage(messageText: string, receiver: User): void {
+    const message = new ChatCommunicationMessage();
+    message.messageText = messageText;
+    message.receiver = receiver;
+    this.sendMessage(message, Config.MESSAGING_CONFIG.chatCommunicationUrl);
+  }
+
+  private listenForMessages(): Observable<IMessage> {
     return this.stompService.watch(Config.MESSAGING_CONFIG.listenForMessagesURL);
   }
 
-  sendChatCommunicationMessage(messageText: string, receiverUsername: string): void {
-    const message = new Message();
-    message.senderUsername = this.authService.getUsername();
-    message.receiverUsername = receiverUsername;
-    message.messageText = messageText;
-    message.messageType = MessageType.CHAT_COMMUNICATION;
-    this.sendMessage(message);
-  }
-
-  sendMessage(message: Message): void {
+  private sendMessage(message: Message | {}, path: string): void {
     this.stompService.publish({
-      destination: Config.MESSAGING_CONFIG.chatCommunicationUrl,
+      destination: path,
       body: JSON.stringify(message)
     });
   }
@@ -57,15 +76,6 @@ export class MessagingService {
     Object.assign(stompConfig, Config.WS_CONFIG);
     stompConfig.brokerURL += `?access_token=${this.authService.getAccessToken()}`;
     return stompConfig;
-  }
-
-  /**
-   * Wrapper around {@link stompService#watch},
-   * adds JWT access token to each request
-   */
-  private subscribe(destination: string, headers: StompHeaders = {}): Observable<IMessage> {
-    headers.access_token = this.authService.getAccessToken();
-    return this.stompService.watch(destination, headers);
   }
 
 }
