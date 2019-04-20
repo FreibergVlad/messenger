@@ -2,8 +2,12 @@ package com.freiberg.service.impl;
 
 import com.freiberg.connection.ConnectionManager;
 import com.freiberg.dao.MessageDao;
+import com.freiberg.model.messages.ContactsResponse;
+import com.freiberg.model.messages.ConversationDataRequest;
+import com.freiberg.model.messages.ConversationDataResponse;
 import com.freiberg.model.DialogPreview;
-import com.freiberg.model.Message;
+import com.freiberg.model.messages.DialogsPreviewsResponse;
+import com.freiberg.model.messages.Message;
 import com.freiberg.model.MessageDTO;
 import com.freiberg.service.MessagingService;
 import com.freiberg.validator.RequestValidator;
@@ -12,18 +16,20 @@ import lombok.AllArgsConstructor;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 @Service
 @AllArgsConstructor
@@ -41,82 +47,63 @@ public class MessagingServiceImpl implements MessagingService {
 
     @Override
     @Transactional
-    public List<DialogPreview> getContacts(Principal principal) {
+    public ContactsResponse getContacts(Principal principal) {
         User user = userDao.findByUsername(principal.getName());
         Set<User> contacts = user.getContacts();
-        List<DialogPreview> dialogPreviews = new ArrayList<>();
-
-        contacts.forEach(contact -> {
-            DialogPreview dialogPreview = new DialogPreview();
-            dialogPreview.setUserId(contact.getId());
-            dialogPreview.setUsername(contact.getUsername());
-            Message lastReceivedMessage = messageDao.findFirstBySenderEqualsAndReceiverEqualsOrderByTimestampDesc(contact, user);
-            if (lastReceivedMessage != null) {
-                dialogPreview.setLastMessage(lastReceivedMessage.getMessageText());
-                dialogPreview.setTimestamp(lastReceivedMessage.getTimestamp());
-            }
-            dialogPreviews.add(dialogPreview);
-        });
-
-        return dialogPreviews;
+        return new ContactsResponse(contacts.stream().map(User::toDto).collect(toSet()));
     }
 
     @Override
     @Transactional
-    public List<MessageDTO> handleConversationDataRequest(Principal principal, Long conversationId) throws Exception {
-        try {
-            requestValidator.validateConversationDataRequest(principal, conversationId);
+    public DialogsPreviewsResponse getDialogsPreviews(Principal principal) {
+        User user = userDao.findByUsername(principal.getName());
+        Set<User> contacts = user.getContacts();
+        List<DialogPreview> dialogPreviews = new ArrayList<>();
+        contacts.forEach(contact -> {
+            DialogPreview dialogPreview = new DialogPreview();
+            List<Message> messages = messageDao.getReceivedMessages(contact, user, PageRequest.of(0, 1,
+                    Sort.by(Sort.Direction.DESC, "timestamp")));
+            if (!messages.isEmpty()) {
+                dialogPreview.setLastMessage(messages.get(0).toDTO());
+            }
+            dialogPreview.setUnreadCount(messageDao.getUnreadMessagesCount(contact, user));
+            dialogPreview.setContact(contact.toDto());
+            dialogPreviews.add(dialogPreview);
+        });
+        return new DialogsPreviewsResponse(dialogPreviews);
+    }
 
-            User sender = userDao.findByUsername(principal.getName());
-            User receiver = userDao.findById(conversationId).get();
-
-            return getAllConversationData(sender, receiver)
-                    .stream()
-                    .map(Message::toDTO)
-                    .sorted(Comparator.comparing(MessageDTO::getTimestamp))
-                    .collect(Collectors.toList());
-        } catch (Exception e) {
-            LOG.error("Error while fetching conversation data. " + e.getMessage(), e);
-            throw new Exception(e);
-        }
+    @Override
+    @Transactional
+    public ConversationDataResponse getMessages(Principal principal, ConversationDataRequest request) throws Exception {
+        requestValidator.validateConversationDataRequest(principal, request);
+        User sender = userDao.findByUsername(principal.getName());
+        User receiver = userDao.findByPublicUserId(request.getContactId());
+        List<MessageDTO> messages = messageDao
+                .getAllConversationMessages(sender, receiver, request.getPageRequest())
+                .stream()
+                .map(Message::toDTO)
+                .collect(toList());
+        return new ConversationDataResponse(messages);
     }
 
     @Override
     public void handleChatCommunicationMessage(Principal principal, MessageDTO messageDto) throws Exception {
-        if (!Objects.equals(messageDto.getSenderUsername(), principal.getName())) {
-            throw new Exception();
-        }
-        User sender = userDao.findByUsername(messageDto.getSenderUsername());
-        User receiver = userDao.findByUsername(messageDto.getReceiverUsername());
-        String messageText = messageDto.getMessageText();
-        if (sender == null || receiver == null) {
-            throw new Exception();
-        }
-        if (!sender.getContacts().contains(receiver)) {
-            throw new Exception();
-        }
+        requestValidator.validateChatMessage(principal, messageDto);
+        User sender = userDao.findByUsername(principal.getName());
+        User receiver = userDao.findByPublicUserId(messageDto.getReceiver().getUserId());
         Message message = new Message();
+        message.setTimestamp(new Date());
+        message.setMessageText(messageDto.getMessageText());
         message.setSender(sender);
         message.setReceiver(receiver);
-        message.setMessageText(messageText);
-        message.setTimestamp(new Date());
-        if (!connectionManager.hasActiveConnection(receiver)) {
-            message.setPending(true);
-            messageDao.save(message);
-        } else {
-            messageDao.save(message);
+        if (connectionManager.hasActiveConnection(receiver)) {
             sendMessage(receiver, message);
+        } else {
+            message.setPending(true);
         }
         sendMessage(sender, message);
-    }
-
-    private List<Message> getAllConversationData(User sender, User receiver) {
-        List<Message> messages = new ArrayList<>();
-        List<Message> sentMessages = messageDao.findMessageBySenderEqualsAndReceiverEquals(sender, receiver);
-        List<Message> receivedMessages = messageDao.findMessageBySenderEqualsAndReceiverEquals(receiver, sender);
-        messages.addAll(sentMessages);
-        messages.addAll(receivedMessages);
-        return messages;
+        messageDao.save(message);
     }
 
     private void sendMessage(User dest, Message message) {

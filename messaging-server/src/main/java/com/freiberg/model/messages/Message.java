@@ -1,5 +1,8 @@
-package com.freiberg.model;
+package com.freiberg.model.messages;
 
+import com.freiberg.model.MessageDTO;
+import com.freiberg.model.MessageType;
+import com.freiberg.model.messages.AbstractChatMessage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -73,7 +76,7 @@ public class Message extends AbstractChatMessage {
     }
 
     public MessageDTO toDTO() {
-        return new MessageDTO(messageId, sender.getUsername(), receiver.getUsername(),
+        return new MessageDTO(messageId, sender.toDto(), receiver.toDto(),
                 timestamp, messageText, getMessageType());
     }
 }

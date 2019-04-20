@@ -1,5 +1,6 @@
-package com.freiberg.model;
+package com.freiberg.model.messages;
 
+import com.freiberg.model.MessageType;
 import lombok.Data;
 import utils.UniqueID;
 

@@ -1,35 +1,46 @@
 package com.freiberg.controller;
 
-import com.freiberg.model.DialogPreview;
+import com.freiberg.model.messages.ContactsResponse;
+import com.freiberg.model.messages.ConversationDataRequest;
+import com.freiberg.model.messages.ConversationDataResponse;
+import com.freiberg.model.messages.DialogsPreviewsResponse;
 import com.freiberg.model.MessageDTO;
 import com.freiberg.service.MessagingService;
 import lombok.AllArgsConstructor;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.annotation.SubscribeMapping;
+import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 
 import java.security.Principal;
-import java.util.List;
 
 @Controller
 @AllArgsConstructor
 public class MessagingController {
 
+    private static final String SUBSCRIPTION_PATH = "/queue/messages";
+
     private MessagingService messagingService;
 
-    @SubscribeMapping("/contacts")
-    public List<DialogPreview> getContacts(Principal principal) {
+    @MessageMapping("/getContacts")
+    @SendToUser(SUBSCRIPTION_PATH)
+    public ContactsResponse getContacts(Principal principal) {
         return messagingService.getContacts(principal);
     }
 
-    @SubscribeMapping("/messages")
-    public List<MessageDTO> getMessages(@Header(name = "conversationId") Long conversationId, Principal principal) throws Exception {
-        return messagingService.handleConversationDataRequest(principal, conversationId);
+    @MessageMapping("/getDialogsPreview")
+    @SendToUser(SUBSCRIPTION_PATH)
+    public DialogsPreviewsResponse getDialogsPreviews(Principal principal) {
+        return messagingService.getDialogsPreviews(principal);
     }
 
-    @MessageMapping("/chat.communication")
-    public void sendMessage(Principal principal, MessageDTO message) throws Exception {
+    @MessageMapping("/getMessageHistory")
+    @SendToUser(SUBSCRIPTION_PATH)
+    public ConversationDataResponse getMessages(Principal principal, ConversationDataRequest request) throws Exception {
+        return messagingService.getMessages(principal, request);
+    }
+
+    @MessageMapping("/sendMessage")
+    public void sendChatCommunicationMessage(Principal principal, MessageDTO message) throws Exception {
         messagingService.handleChatCommunicationMessage(principal, message);
     }
 }

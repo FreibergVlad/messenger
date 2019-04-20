@@ -1,4 +1,4 @@
-package com.freiberg.model;
+package com.freiberg.model.messages;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
