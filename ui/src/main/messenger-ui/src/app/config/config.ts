@@ -29,7 +29,8 @@ export class Config {
     getDialogsPreviewsURL: `${Config.APP_DEST_PREFIX}/getDialogsPreview`,
     getMessagesURL: `${Config.APP_DEST_PREFIX}/getMessageHistory`,
     listenForMessagesURL: '/user/queue/messages',
-    chatCommunicationUrl: `${Config.APP_DEST_PREFIX}/sendMessage`
+    chatCommunicationUrl: `${Config.APP_DEST_PREFIX}/sendMessage`,
+    markAsReadUrl: `${Config.APP_DEST_PREFIX}/markAsRead`
   };
 
 }

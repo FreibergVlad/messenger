@@ -18,6 +18,7 @@ import { FormsModule } from '@angular/forms';
 import { UserAvatarComponent } from './components/user-avatar/user-avatar.component';
 import { RxStompService } from '@stomp/ng2-stompjs';
 import { DomChangeDirective } from './directives/dom-change/dom-change.directive';
+import {InViewportModule} from 'ng-in-viewport';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { DomChangeDirective } from './directives/dom-change/dom-change.directive
   ],
   imports: [
     BrowserModule,
+    InViewportModule,
     BrowserAnimationsModule,
     FormsModule,
     ScrollPanelModule,

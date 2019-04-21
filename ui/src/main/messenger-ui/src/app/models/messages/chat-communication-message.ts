@@ -8,6 +8,7 @@ export class ChatCommunicationMessage extends Message {
   receiver: User;
   messageText: string;
   timestamp: number;
+  markedAsRead: boolean;
 
   get messageType(): MessageType {
     return MessageType.CHAT_COMMUNICATION;

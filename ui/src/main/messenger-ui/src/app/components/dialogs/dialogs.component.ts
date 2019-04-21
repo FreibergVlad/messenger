@@ -41,6 +41,9 @@ export class DialogsComponent implements OnInit, AfterViewInit {
     this.messagingService.getChatMessages().subscribe(message => {
       this.onMessageReceived(message);
     });
+    this.messagingService.markedAsRead$.subscribe((message: ChatCommunicationMessage) => {
+      this.getDialogByUsername(message.sender.username).unreadCount--;
+    });
   }
 
   ngAfterViewInit(): void {
@@ -82,10 +85,6 @@ export class DialogsComponent implements OnInit, AfterViewInit {
 
   changeDialog(tabId?: string): void {
     this.selectedTabId = tabId;
-    const currentDialog = this.getCurrentDialog();
-    if (currentDialog) {
-      currentDialog.unreadCount = 0;
-    }
   }
 
   /**

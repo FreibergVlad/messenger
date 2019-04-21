@@ -4,6 +4,7 @@ import {MessagingService} from '../../services/messaging/messaging.service';
 import {ScrollPanel} from 'primeng/primeng';
 import {ChatCommunicationMessage} from '../../models/messages/chat-communication-message';
 import {ConversationDataRequest} from '../../models/messages/conversation-data-request';
+import {AuthService} from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-messages',
@@ -20,6 +21,7 @@ export class MessagesComponent implements OnInit {
   scrollPanel: ScrollPanel;
 
   constructor(private route: ActivatedRoute,
+              private authService: AuthService,
               private messagingService: MessagingService) { }
 
   ngOnInit() {
@@ -36,6 +38,13 @@ export class MessagesComponent implements OnInit {
 
   onMessageReceived(message: ChatCommunicationMessage) {
     this.messages.push(message);
+  }
+
+  onMessageInViewport(message: ChatCommunicationMessage) {
+    if (!message.markedAsRead && this.authService.getUsername() === message.receiver.username) {
+      message.markedAsRead = true;
+      this.messagingService.markAsRead(message);
+    }
   }
 
   scrollToEnd() {

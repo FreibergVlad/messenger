@@ -24,6 +24,10 @@ export class MessagingService {
     this.messageRouter.registerSubjects();
   }
 
+  private markedAsReadSource = new Subject<ChatCommunicationMessage>();
+
+  markedAsRead$ = this.markedAsReadSource.asObservable();
+
   initMessaging() {
     this.stompService.configure(this.updateConfigWithAccessToken());
     this.stompService.activate();
@@ -57,11 +61,16 @@ export class MessagingService {
     this.sendMessage(message, Config.MESSAGING_CONFIG.chatCommunicationUrl);
   }
 
+  markAsRead(message: ChatCommunicationMessage) {
+    this.sendMessage([message.messageId], Config.MESSAGING_CONFIG.markAsReadUrl);
+    this.markedAsReadSource.next(message);
+  }
+
   private listenForMessages(): Observable<IMessage> {
     return this.stompService.watch(Config.MESSAGING_CONFIG.listenForMessagesURL);
   }
 
-  private sendMessage(message: Message | {}, path: string): void {
+  private sendMessage(message, path: string): void {
     this.stompService.publish({
       destination: path,
       body: JSON.stringify(message)
