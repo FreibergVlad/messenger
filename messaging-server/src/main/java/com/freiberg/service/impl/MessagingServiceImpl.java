@@ -88,6 +88,7 @@ public class MessagingServiceImpl implements MessagingService {
     }
 
     @Override
+    @Transactional
     public void handleChatCommunicationMessage(Principal principal, MessageDTO messageDto) throws Exception {
         requestValidator.validateChatMessage(principal, messageDto);
         User sender = userDao.findByUsername(principal.getName());
@@ -97,13 +98,19 @@ public class MessagingServiceImpl implements MessagingService {
         message.setMessageText(messageDto.getMessageText());
         message.setSender(sender);
         message.setReceiver(receiver);
+        message.setPending(true);
         if (connectionManager.hasActiveConnection(receiver)) {
             sendMessage(receiver, message);
-        } else {
-            message.setPending(true);
         }
         sendMessage(sender, message);
         messageDao.save(message);
+    }
+
+    @Override
+    @Transactional
+    public void markAsRead(Principal principal, List<String> messageIds) throws Exception {
+        requestValidator.validateMarkAsRead(principal, messageIds);
+        messageDao.markAsRead(messageIds);
     }
 
     private void sendMessage(User dest, Message message) {

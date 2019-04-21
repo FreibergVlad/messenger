@@ -17,6 +17,7 @@ public class MessageDTO {
     private UserDTO receiver;
     private Date timestamp;
     private String messageText;
+    private boolean markedAsRead;
     private MessageType messageType;
 
 }

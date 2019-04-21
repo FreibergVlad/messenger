@@ -77,6 +77,6 @@ public class Message extends AbstractChatMessage {
 
     public MessageDTO toDTO() {
         return new MessageDTO(messageId, sender.toDto(), receiver.toDto(),
-                timestamp, messageText, getMessageType());
+                timestamp, messageText, !pending, getMessageType());
     }
 }

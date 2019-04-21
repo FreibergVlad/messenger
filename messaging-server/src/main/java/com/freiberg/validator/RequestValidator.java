@@ -1,7 +1,9 @@
 package com.freiberg.validator;
 
+import com.freiberg.dao.MessageDao;
 import com.freiberg.model.messages.ConversationDataRequest;
 import com.freiberg.model.MessageDTO;
+import com.freiberg.model.messages.Message;
 import dao.UserDao;
 import lombok.AllArgsConstructor;
 import model.User;
@@ -12,6 +14,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Nullable;
 import javax.transaction.Transactional;
 import java.security.Principal;
+import java.util.List;
+import java.util.Optional;
 
 @Component
 @AllArgsConstructor
@@ -20,6 +24,7 @@ public class RequestValidator {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     private UserDao userDao;
+    private MessageDao messageDao;
 
     @Transactional
     public void validateConversationDataRequest(Principal principal, ConversationDataRequest request) throws Exception {
@@ -35,6 +40,21 @@ public class RequestValidator {
         User sender = userDao.findByUsername(principal.getName());
         User receiver = userDao.findByPublicUserId(messageDTO.getReceiver().getUserId());
         checkWriteAccess(sender, receiver);
+    }
+
+    @Transactional
+    public void validateMarkAsRead(Principal principal, List<String> messageIds) throws Exception {
+        checkAuthentication(principal);
+        for (String messageId: messageIds) {
+            Optional<Message> messageOptional = messageDao.findById(messageId);
+            if (messageOptional.isPresent()) {
+                if (!messageOptional.get().getReceiver().getUsername().equals(principal.getName())) {
+                    logErrorAndThrow("Message does not belongs to this user");
+                }
+            } else {
+                logErrorAndThrow(String.format("Message with id %s doesn't exist", messageId));
+            }
+        }
     }
 
     /**

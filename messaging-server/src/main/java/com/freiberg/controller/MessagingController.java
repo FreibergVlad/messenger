@@ -12,6 +12,7 @@ import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 @AllArgsConstructor
@@ -42,5 +43,10 @@ public class MessagingController {
     @MessageMapping("/sendMessage")
     public void sendChatCommunicationMessage(Principal principal, MessageDTO message) throws Exception {
         messagingService.handleChatCommunicationMessage(principal, message);
+    }
+
+    @MessageMapping("/markAsRead")
+    public void markAsRead(Principal principal, List<String> messageIds) throws Exception {
+        messagingService.markAsRead(principal, messageIds);
     }
 }
