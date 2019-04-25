@@ -1,8 +1,8 @@
 package com.freiberg.model.messages;
 
+import com.freiberg.converter.CryptoConverter;
 import com.freiberg.model.MessageDTO;
 import com.freiberg.model.MessageType;
-import com.freiberg.model.messages.AbstractChatMessage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +10,8 @@ import lombok.Setter;
 import model.User;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Converts;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -25,6 +27,12 @@ import java.util.Date;
 @NoArgsConstructor
 @Entity
 @Table(name = "messages")
+@Converts({
+        @Convert(
+                attributeName="messageText",
+                converter=CryptoConverter.class
+        )
+})
 public class Message extends AbstractChatMessage {
 
     @Getter
