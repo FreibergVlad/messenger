@@ -1,10 +1,12 @@
 package com.freiberg.controller;
 
+import com.freiberg.model.MessageDTO;
 import com.freiberg.model.messages.ContactsResponse;
 import com.freiberg.model.messages.ConversationDataRequest;
 import com.freiberg.model.messages.ConversationDataResponse;
 import com.freiberg.model.messages.DialogsPreviewsResponse;
-import com.freiberg.model.MessageDTO;
+import com.freiberg.model.messages.UserSearchRequest;
+import com.freiberg.model.messages.UserSearchResultResponse;
 import com.freiberg.service.MessagingService;
 import lombok.AllArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -38,6 +40,15 @@ public class MessagingController {
     @SendToUser(SUBSCRIPTION_PATH)
     public ConversationDataResponse getMessages(Principal principal, ConversationDataRequest request) throws Exception {
         return messagingService.getMessages(principal, request);
+    }
+
+    @MessageMapping("/searchForUsers")
+    @SendToUser(SUBSCRIPTION_PATH)
+    public UserSearchResultResponse searchForUsers(
+            Principal principal,
+            UserSearchRequest userSearchRequest
+    ) throws Exception {
+        return messagingService.searchForUsers(principal, userSearchRequest);
     }
 
     @MessageMapping("/sendMessage")

@@ -2,18 +2,21 @@ package com.freiberg.service.impl;
 
 import com.freiberg.connection.ConnectionManager;
 import com.freiberg.dao.MessageDao;
+import com.freiberg.model.DialogPreview;
+import com.freiberg.model.MessageDTO;
 import com.freiberg.model.messages.ContactsResponse;
 import com.freiberg.model.messages.ConversationDataRequest;
 import com.freiberg.model.messages.ConversationDataResponse;
-import com.freiberg.model.DialogPreview;
 import com.freiberg.model.messages.DialogsPreviewsResponse;
 import com.freiberg.model.messages.Message;
-import com.freiberg.model.MessageDTO;
+import com.freiberg.model.messages.UserSearchRequest;
+import com.freiberg.model.messages.UserSearchResultResponse;
 import com.freiberg.service.MessagingService;
 import com.freiberg.validator.RequestValidator;
 import dao.UserDao;
 import lombok.AllArgsConstructor;
 import model.User;
+import model.UserDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +27,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -51,6 +55,21 @@ public class MessagingServiceImpl implements MessagingService {
         User user = userDao.findByUsername(principal.getName());
         Set<User> contacts = user.getContacts();
         return new ContactsResponse(contacts.stream().map(User::toDto).collect(toSet()));
+    }
+
+    @Override
+    @Transactional
+    public UserSearchResultResponse searchForUsers(
+            Principal principal,
+            UserSearchRequest userSearchRequest
+    ) throws Exception {
+        requestValidator.checkAuthentication(principal);
+        Collection<User> users = userDao.findByUsernameStartsWith(
+                userSearchRequest.getNamePattern(),
+                userSearchRequest.getPageRequest()
+        );
+        List<UserDTO> userDTOs = users.stream().map(User::toDto).collect(toList());
+        return new UserSearchResultResponse(userDTOs);
     }
 
     @Override

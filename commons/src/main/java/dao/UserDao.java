@@ -1,11 +1,16 @@
 package dao;
 
 import model.User;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface UserDao extends JpaRepository<User, Long> {
+import java.util.Collection;
+
+public interface UserDao extends PagingAndSortingRepository<User, Long> {
 
     User findByUsername(String username);
+
+    Collection<User> findByUsernameStartsWith(String namePattern, PageRequest pageRequest);
 
     User findByPublicUserId(String publicUserId);
 

@@ -57,6 +57,12 @@ public class RequestValidator {
         }
     }
 
+    public void checkAuthentication(@Nullable Principal principal) throws Exception {
+        if (principal == null) {
+            logErrorAndThrow("Principal is null");
+        }
+    }
+
     /**
      * Checks if sender can send messages to receiver
      * TODO Find more appropriate method name
@@ -69,12 +75,6 @@ public class RequestValidator {
                 logErrorAndThrow(String.format("User %s doesn't have access rights to send messages to user %s",
                                 sender, receiver));
             }
-        }
-    }
-
-    private void checkAuthentication(@Nullable Principal principal) throws Exception {
-        if (principal == null) {
-            logErrorAndThrow("Principal is null");
         }
     }
 

@@ -10,12 +10,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ConversationDataRequest extends PageableRequest {
+public class UserSearchRequest extends PageableRequest {
 
-    private String contactId;
+    private String namePattern;
 
     @Override
     public MessageType getMessageType() {
-        return MessageType.CONVERSATION_DATA_REQUEST;
+        return MessageType.USER_SEARCH_REQUEST;
     }
 }
