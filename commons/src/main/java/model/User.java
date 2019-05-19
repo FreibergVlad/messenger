@@ -2,7 +2,6 @@ package model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 import utils.UniqueID;
 
@@ -21,10 +20,13 @@ import java.util.Date;
 import java.util.Set;
 
 @Data
-@NoArgsConstructor
 @Entity
 @Table(name = "users")
 public class User {
+
+    public User() {
+        this.publicUserId = UniqueID.getUniqueId();
+    }
 
     public User(String username, String password,
                 Date lastLogin, boolean locked, Set<Role> roles, Set<User> contacts) {
