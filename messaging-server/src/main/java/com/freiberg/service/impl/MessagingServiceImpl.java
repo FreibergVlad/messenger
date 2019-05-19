@@ -27,7 +27,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -64,11 +63,16 @@ public class MessagingServiceImpl implements MessagingService {
             UserSearchRequest userSearchRequest
     ) throws Exception {
         requestValidator.checkAuthentication(principal);
-        Collection<User> users = userDao.findByUsernameStartsWith(
+        User sender = userDao.findByUsername(principal.getName());
+        List<User> users = userDao.findUserByNamePattern(
                 userSearchRequest.getNamePattern(),
                 userSearchRequest.getPageRequest()
         );
-        List<UserDTO> userDTOs = users.stream().map(User::toDto).collect(toList());
+        List<UserDTO> userDTOs = users
+                .stream()
+                .filter(user -> !sender.getContacts().contains(user))
+                .map(User::toDto)
+                .collect(toList());
         return new UserSearchResultResponse(userDTOs);
     }
 
