@@ -1,12 +1,11 @@
 import {MessageType} from '../message-types';
 import {PageableRequest} from './pageable-request';
 
-export class ConversationDataRequest extends PageableRequest {
+export class UserSearchRequest extends PageableRequest {
 
-  contactId: string;
+  namePattern: string;
 
   get messageType(): MessageType {
-    return MessageType.CONVERSATION_DATA_REQUEST;
+    return MessageType.USER_SEARCH_REQUEST;
   }
-
 }
