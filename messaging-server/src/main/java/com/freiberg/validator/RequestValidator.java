@@ -31,7 +31,7 @@ public class RequestValidator {
         checkAuthentication(principal);
         User sender = userDao.findByUsername(principal.getName());
         User receiver = userDao.findByPublicUserId(request.getContactId());
-        checkWriteAccess(sender, receiver);
+        areUsersExist(sender, receiver);
     }
 
     @Transactional
@@ -39,7 +39,7 @@ public class RequestValidator {
         checkAuthentication(principal);
         User sender = userDao.findByUsername(principal.getName());
         User receiver = userDao.findByPublicUserId(messageDTO.getReceiver().getUserId());
-        checkWriteAccess(sender, receiver);
+        areUsersExist(sender, receiver);
     }
 
     @Transactional
@@ -65,16 +65,12 @@ public class RequestValidator {
 
     /**
      * Checks if sender can send messages to receiver
-     * TODO Find more appropriate method name
+     * TODO Need to implement some kind of authorization to
+     *      disable ability to send messages to users outside of contact list
      */
-    private void checkWriteAccess(@Nullable User sender, @Nullable User receiver) throws Exception {
+    private void areUsersExist(@Nullable User sender, @Nullable User receiver) throws Exception {
         if (sender == null || receiver == null) {
             logErrorAndThrow("User doesn't exist");
-        } else {
-            if (!sender.getContacts().contains(receiver)) {
-                logErrorAndThrow(String.format("User %s doesn't have access rights to send messages to user %s",
-                                sender, receiver));
-            }
         }
     }
 

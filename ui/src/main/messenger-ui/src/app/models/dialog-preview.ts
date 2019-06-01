@@ -7,7 +7,7 @@ export class DialogPreview {
   lastMessage: ChatCommunicationMessage;
   unreadCount: number;
 
-  constructor(contact, lastMessage, unreadCount = 0) {
+  constructor(contact, lastMessage = null, unreadCount = 0) {
     this.contact = contact;
     this.lastMessage = lastMessage;
     this.unreadCount = unreadCount;

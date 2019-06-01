@@ -19,6 +19,8 @@ import { UserAvatarComponent } from './components/user-avatar/user-avatar.compon
 import { RxStompService } from '@stomp/ng2-stompjs';
 import { DomChangeDirective } from './directives/dom-change/dom-change.directive';
 import {InViewportModule} from 'ng-in-viewport';
+import {UsernameFilterPipe} from './pipes/username-filter-pipe';
+import { UserSearchComponent } from './components/user-search/user-search.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,9 @@ import {InViewportModule} from 'ng-in-viewport';
     MessageComponent,
     BottomPanelComponent,
     UserAvatarComponent,
-    DomChangeDirective
+    DomChangeDirective,
+    UsernameFilterPipe,
+    UserSearchComponent
   ],
   imports: [
     BrowserModule,

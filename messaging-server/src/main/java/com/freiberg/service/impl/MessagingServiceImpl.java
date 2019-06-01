@@ -70,7 +70,8 @@ public class MessagingServiceImpl implements MessagingService {
         );
         List<UserDTO> userDTOs = users
                 .stream()
-                .filter(user -> !sender.getContacts().contains(user))
+                .filter(user -> !sender.getUsername().equals(user.getUsername())
+                            && !sender.getContacts().contains(user))
                 .map(User::toDto)
                 .collect(toList());
         return new UserSearchResultResponse(userDTOs);
@@ -122,6 +123,10 @@ public class MessagingServiceImpl implements MessagingService {
         message.setSender(sender);
         message.setReceiver(receiver);
         message.setPending(true);
+        if (!sender.getContacts().contains(receiver)) {
+            sender.getContacts().add(receiver);
+            receiver.getContacts().add(sender);
+        }
         if (connectionManager.hasActiveConnection(receiver)) {
             sendMessage(receiver, message);
         }

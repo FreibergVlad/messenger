@@ -66,6 +66,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "roleID"))
     private Set<Role> roles;
 
+    @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name ="contacts",

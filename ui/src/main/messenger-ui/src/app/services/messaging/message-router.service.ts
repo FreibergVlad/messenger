@@ -16,6 +16,7 @@ export class MessageRouter {
     this.messageSubjects.set(MessageType.DIALOGS_PREVIEWS_RESPONSE.toString(), new Subject());
     this.messageSubjects.set(MessageType.CONVERSATION_DATA_RESPONSE.toString(), new Subject());
     this.messageSubjects.set(MessageType.CHAT_COMMUNICATION.toString(), new Subject());
+    this.messageSubjects.set(MessageType.USER_SEARCH_RESULT_RESPONSE.toString(), new Subject());
   }
 
   getMessageSubject(messageType: string): Subject<Message> {

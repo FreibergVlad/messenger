@@ -1,0 +1,16 @@
+input {
+  background-color: #F2F2F2;
+}
+
+span {
+  background-color: #F2F2F2;
+  border-left: 0 !important;
+}
+
+.input-group-text {
+  border-right: 0;
+}
+
+.search-box {
+  padding: 15px 30px 15px 15px;
+}

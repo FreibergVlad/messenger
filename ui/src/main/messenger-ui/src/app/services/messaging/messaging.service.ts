@@ -12,6 +12,9 @@ import {ChatCommunicationMessage} from '../../models/messages/chat-communication
 import {User} from '../../models/user';
 import {ConversationDataResponse} from '../../models/messages/conversation-data-response';
 import {ConversationDataRequest} from '../../models/messages/conversation-data-request';
+import {UserSearchResultResponse} from '../../models/messages/user-search-result-response';
+import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
+import {UserSearchRequest} from '../../models/messages/user-search-request';
 
 @Injectable({
   providedIn: 'root'
@@ -64,6 +67,22 @@ export class MessagingService {
   markAsRead(message: ChatCommunicationMessage) {
     this.sendMessage([message.messageId], Config.MESSAGING_CONFIG.markAsReadUrl);
     this.markedAsReadSource.next(message);
+  }
+
+  searchForUsers(namePattern: Observable<string>): Observable<UserSearchResultResponse> {
+    return namePattern.pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap(searchTerm => {
+        if (searchTerm.trim().length) {
+          const userSearchRequest = new UserSearchRequest();
+          userSearchRequest.namePattern = searchTerm;
+          this.sendMessage(userSearchRequest, Config.MESSAGING_CONFIG.searchForUsersUrl);
+        }
+        return this.messageRouter.getMessageSubject(MessageType.USER_SEARCH_RESULT_RESPONSE) as
+          Subject<UserSearchResultResponse>;
+      })
+    );
   }
 
   private listenForMessages(): Observable<IMessage> {

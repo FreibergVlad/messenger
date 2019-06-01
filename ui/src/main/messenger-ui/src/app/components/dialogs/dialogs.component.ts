@@ -8,6 +8,7 @@ import {Location} from '@angular/common';
 import {Capabilities} from '../../services/utils/capabilities';
 import {ChatCommunicationMessage} from '../../models/messages/chat-communication-message';
 import {User} from '../../models/user';
+import {UserSearchComponent} from '../user-search/user-search.component';
 
 @Component({
   selector: 'app-dialogs',
@@ -18,12 +19,16 @@ import {User} from '../../models/user';
 export class DialogsComponent implements OnInit, AfterViewInit {
 
   dialogsList: DialogPreview[] = [];
+  searchResults: DialogPreview[] = [];
   selectedTabId?: string = null;
 
   isMobile = false;
 
   @ViewChild(MessagesComponent)
   messagesComponent: MessagesComponent;
+
+  @ViewChild(UserSearchComponent)
+  userSearchComponent: UserSearchComponent;
 
   constructor(private authService: AuthService,
               private messagingService: MessagingService,
@@ -57,9 +62,18 @@ export class DialogsComponent implements OnInit, AfterViewInit {
 
   onMessageSent(message: string) {
     if (this.selectedTabId) {
-      const receiver: User = this.getCurrentDialog().contact;
-      if (receiver) {
-        this.messagingService.sendChatCommunicationMessage(message, receiver);
+      const receiverTab: DialogPreview = this.getCurrentDialog();
+      let receiverUser: User;
+      if (!receiverTab) {
+        // Here we know that message was sent to user outside of contact list
+        const newContact = this.searchResults.find(user => user.contact.userId === this.selectedTabId);
+        this.dialogsList.push(new DialogPreview(newContact.contact));
+        receiverUser = newContact.contact;
+      } else {
+        receiverUser = receiverTab.contact;
+      }
+      if (receiverUser) {
+        this.messagingService.sendChatCommunicationMessage(message, receiverUser);
       }
     }
   }
@@ -69,6 +83,8 @@ export class DialogsComponent implements OnInit, AfterViewInit {
     const targetDialog = this.getDialogByUsername(message.sender.username);
     if (this.isAcknowledgeMessage(message)) {
       this.messagesComponent.onMessageReceived(message);
+    } else if (!targetDialog) {
+      this.messageFromNewContactReceived(message);
     } else if (!currentDialog) {
       if (this.authService.getUsername() !== message.sender.username) {
         targetDialog.lastMessage = message;
@@ -83,8 +99,20 @@ export class DialogsComponent implements OnInit, AfterViewInit {
     }
   }
 
+  searchResultReceived(userList: User[]): void {
+    this.searchResults = userList.map(user => new DialogPreview(user));
+  }
+
   changeDialog(tabId?: string): void {
     this.selectedTabId = tabId;
+  }
+
+  /**
+   * Processes messages that were received from new users (users outside of contact list)
+   */
+  private messageFromNewContactReceived(message: ChatCommunicationMessage): void {
+    const newDialogTab = new DialogPreview(message.sender, message, 1);
+    this.dialogsList.push(newDialogTab);
   }
 
   /**
